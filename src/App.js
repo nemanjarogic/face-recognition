@@ -1,6 +1,8 @@
 import React from 'react';
 import Particles from 'react-particles-js';
 import Clarifai from 'clarifai';
+import SignIn from './components/SignIn/SignIn';
+import Register from './components/Register/Register';
 import Navigation from './components/Navigation/Navigation';
 import Logo from './components/Logo/Logo';
 import ImageLinkForm from './components/ImageLinkForm/ImageLinkForm';
@@ -37,7 +39,8 @@ class App extends React.Component {
     this.state = {
       input: '',
       imageUrl: '',
-      box: {}
+      box: {},
+      route:'signin'
     }
   }
 
@@ -73,17 +76,36 @@ class App extends React.Component {
     this.setState({box: box})
   }
 
+  onRouteChange = (route) => {
+    this.setState({route: route});
+  }
+
   render() {
-    return (
-      <div className="App">
-        <Particles className='particles' params={particlesConfiguration}/>
-        <Navigation />
+    const homeContent = 
+      <div>
+        <Navigation onRouteChange={this.onRouteChange}/>
         <Logo />
         <Rank />
         <ImageLinkForm 
           onInputChange={this.onInputChange} 
           onButtonSubmit={this.onButtonSubmit}/>
         <FaceRecognition imageUrl={this.state.imageUrl} box={this.state.box}/>
+    </div>;
+
+    const signInContent = 
+      <SignIn onRouteChange={this.onRouteChange}/>;
+
+    const registerContent = 
+      <Register onRouteChange={this.onRouteChange}/>;
+
+    return (
+      <div className="App">
+        <Particles className='particles' params={particlesConfiguration}/>
+        
+        {
+          this.state.route === 'home' ? homeContent : 
+            ( this.state.route === 'signin' ? signInContent : registerContent)
+        }
       </div>
     );
   }
