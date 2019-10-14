@@ -1,8 +1,7 @@
 import React from 'react';
 
-const Navigation = ({ onRouteChange, isSignedIn }) => {
-    debugger;
-    if (isSignedIn) {
+const Navigation = ({ onRouteChange, isUserSignedIn }) => {
+    if (isUserSignedIn) {
         return (
             <nav style={{display: 'flex', justifyContent: 'flex-end'}}>
                 <p 

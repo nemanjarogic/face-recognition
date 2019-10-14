@@ -21,9 +21,9 @@ class App extends React.Component {
     this.state = {
       input: '',
       imageUrl: '',
-      box: {},
+      faceRecognitionBoxes: [],
       route:'signin',
-      isSignedIn: false,
+      isUserSignedIn: false,
     }
   }
 
@@ -40,37 +40,38 @@ class App extends React.Component {
   }
 
   calculateFaceLocation = (data) => {
-    const clarifaiFace = data.outputs[0].data.regions[0].region_info.bounding_box;
-
     const image = document.getElementById('inputImage');
     const width = Number(image.width);
     const height = Number(image.height);
     
-    return {
-      leftCol: clarifaiFace.left_col * width,
-      topRow: clarifaiFace.top_row * height,
-      rightCol: width - (clarifaiFace.right_col * width),
-      bottomRow: height - (clarifaiFace.bottom_row * height)
-    }
+    return data.outputs[0].data.regions.map(region => {
+      const clarifaiFace = region.region_info.bounding_box;
+
+      return {
+        leftCol: clarifaiFace.left_col * width,
+        topRow: clarifaiFace.top_row * height,
+        rightCol: width - (clarifaiFace.right_col * width),
+        bottomRow: height - (clarifaiFace.bottom_row * height)
+      }
+    });
   }
 
-  displayFaceRecognitionBoxes = (box) => {
-    this.setState({box: box})
+  displayFaceRecognitionBoxes = (faceRecognitionBoxes) => {
+    this.setState({faceRecognitionBoxes: faceRecognitionBoxes})
   }
 
   onRouteChange = (route) => {
-    debugger;
     if (route === 'signout') {
-      this.setState({isSignedIn: false});
+      this.setState({isUserSignedIn: false});
     } else if(route === 'home') {
-      this.setState({isSignedIn: true});
+      this.setState({isUserSignedIn: true});
     }
 
     this.setState({route: route});
   }
 
   render() {
-    const { isSignedIn,  imageUrl, route, box } = this.state;
+    const { isUserSignedIn,  imageUrl, route, faceRecognitionBoxes } = this.state;
 
     const homeContent = 
       <div>
@@ -79,7 +80,7 @@ class App extends React.Component {
         <ImageLinkForm 
           onInputChange={this.onInputChange} 
           onButtonSubmit={this.onButtonSubmit}/>
-        <FaceRecognition imageUrl={imageUrl} box={box}/>
+        <FaceRecognition imageUrl={imageUrl} faceRecognitionBoxes={faceRecognitionBoxes}/>
       </div>;
 
     const signInContent = 
@@ -91,7 +92,7 @@ class App extends React.Component {
     return (
       <div className="App">
         <Particles className='particles' params={particlesConfiguration}/>
-        <Navigation onRouteChange={this.onRouteChange} isSignedIn={isSignedIn}/>
+        <Navigation onRouteChange={this.onRouteChange} isUserSignedIn={isUserSignedIn}/>
         
         {
           route === 'home' ? homeContent : 
