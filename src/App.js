@@ -1,6 +1,7 @@
 import React from 'react';
-import Particles from 'react-particles-js';
 import Clarifai from 'clarifai';
+import Particles from 'react-particles-js';
+import { clarifaiApiKey, particlesConfiguration } from './config';
 import SignIn from './components/SignIn/SignIn';
 import Register from './components/Register/Register';
 import Navigation from './components/Navigation/Navigation';
@@ -11,27 +12,8 @@ import FaceRecognition from './components/FaceRecognition/FaceRecognition';
 import './App.css';
 
 const app = new Clarifai.App({
-  apiKey: '681195e7b95b49638874121ead95f132'
- });
-
-const particlesConfiguration = {
-  "particles": {
-      "number": {
-          "value": 100
-      },
-      "size": {
-          "value": 2
-      }
-  },
-  "interactivity": {
-      "events": {
-          "onhover": {
-              "enable": true,
-              "mode": "repulse"
-          }
-      }
-  }
-};
+  apiKey: clarifaiApiKey
+});
 
 class App extends React.Component {
   constructor() {
@@ -40,7 +22,8 @@ class App extends React.Component {
       input: '',
       imageUrl: '',
       box: {},
-      route:'signin'
+      route:'signin',
+      isSignedIn: false,
     }
   }
 
@@ -72,25 +55,32 @@ class App extends React.Component {
   }
 
   displayFaceRecognitionBoxes = (box) => {
-    console.log(box);
     this.setState({box: box})
   }
 
   onRouteChange = (route) => {
+    debugger;
+    if (route === 'signout') {
+      this.setState({isSignedIn: false});
+    } else if(route === 'home') {
+      this.setState({isSignedIn: true});
+    }
+
     this.setState({route: route});
   }
 
   render() {
+    const { isSignedIn,  imageUrl, route, box } = this.state;
+
     const homeContent = 
       <div>
-        <Navigation onRouteChange={this.onRouteChange}/>
         <Logo />
         <Rank />
         <ImageLinkForm 
           onInputChange={this.onInputChange} 
           onButtonSubmit={this.onButtonSubmit}/>
-        <FaceRecognition imageUrl={this.state.imageUrl} box={this.state.box}/>
-    </div>;
+        <FaceRecognition imageUrl={imageUrl} box={box}/>
+      </div>;
 
     const signInContent = 
       <SignIn onRouteChange={this.onRouteChange}/>;
@@ -101,10 +91,11 @@ class App extends React.Component {
     return (
       <div className="App">
         <Particles className='particles' params={particlesConfiguration}/>
+        <Navigation onRouteChange={this.onRouteChange} isSignedIn={isSignedIn}/>
         
         {
-          this.state.route === 'home' ? homeContent : 
-            ( this.state.route === 'signin' ? signInContent : registerContent)
+          route === 'home' ? homeContent : 
+            ( route === 'signin' || route === 'signout' ? signInContent : registerContent)
         }
       </div>
     );
