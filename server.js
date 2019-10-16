@@ -1,5 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const bcrypt = require('bcrypt-nodejs');
 
 const app = express();
 app.use(bodyParser.json());
@@ -10,7 +11,6 @@ const database = {
             id: '123',
             name: 'John',
             email: 'john@gmail.com',
-            password: 'apple',
             submitedPhotos: 0,
             registredTime: new Date()
         },
@@ -18,9 +18,15 @@ const database = {
             id: '124',
             name: 'Sally',
             email: 'sally@gmail.com',
-            password: 'orange',
             submitedPhotos: 0,
             registredTime: new Date()
+        }
+    ],
+    login: [
+        {
+            id: '123',
+            hash: '',
+            email: 'john@gmail.com'
         }
     ]
 }
@@ -52,7 +58,11 @@ app.post('/signin', (req, res) => {
 });
 
 app.post('/register', (req, res) => {
-    const { email, name,password } = req.body;
+    const { email, name, password } = req.body;
+    bcrypt.hash(password, null, null, function(err, hash) {
+        console.log(hash);
+    });
+    
     database.users.push({
         id: '125',
         name,
@@ -71,7 +81,7 @@ app.get('/profile/:id', (req, res) => {
         return res.json(user);
     }
 
-    res.status(404).json('Requsted user is not found');
+    res.status(404).json('Requsted user is not found.');
 });
 
 app.put('/image', (req, res) => {
@@ -81,8 +91,9 @@ app.put('/image', (req, res) => {
         return res.json(user.submitedPhotos);
     }
 
-    res.status(404).json('Requsted user is not found');
+    res.status(404).json('Requsted user is not found.');
 });
+
 
 app.listen(3000, () => {
     console.log('Server is running on port 3000...');
