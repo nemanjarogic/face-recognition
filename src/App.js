@@ -24,18 +24,40 @@ class App extends React.Component {
       faceRecognitionBoxes: [],
       route:'signin',
       isUserSignedIn: false,
+      user: {
+        id: '',
+        name: '',
+        email: '',
+        submitedPhotos: 0,
+        registredTime: ''
+      }
     }
   }
 
-  onInputChange = (event) => {
+  onImageLinkChange = (event) => {
     this.setState({ input: event.target.value });
   }
 
-  onButtonSubmit = () => {
+  onImageDetectSubmit = () => {
     this.setState({imageUrl: this.state.input});
 
     app.models.predict(Clarifai.FACE_DETECT_MODEL, this.state.input)
-     .then(response => this.displayFaceRecognitionBoxes(this.calculateFaceLocation(response)))
+     .then(response => {
+       if(response) {
+         fetch('http://localhost:3000/image', {
+          method: 'put',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({
+              id: this.state.user.id
+          })
+      })
+          .then(response => response.json())
+          .then(updatedSubmitedPhotos => {
+              this.setState(Object.assign(this.state.user, { submitedPhotos: updatedSubmitedPhotos }));
+          })
+       }
+       this.displayFaceRecognitionBoxes(this.calculateFaceLocation(response))
+     })
      .catch(err => console.log(err)); 
   }
 
@@ -70,24 +92,34 @@ class App extends React.Component {
     this.setState({route: route});
   }
 
+  loadUser = (data) => {
+    this.setState({user: {
+      id: data.id,
+      name: data.name,
+      email: data.email,
+      submitedPhotos: data.submitedPhotos,
+      registredTime: data.registredTime
+    }})
+  }
+
   render() {
     const { isUserSignedIn,  imageUrl, route, faceRecognitionBoxes } = this.state;
 
     const homeContent = 
       <div>
         <Logo />
-        <Rank />
+        <Rank name={this.state.user.name} submitedPhotos={this.state.user.submitedPhotos}/>
         <ImageLinkForm 
-          onInputChange={this.onInputChange} 
-          onButtonSubmit={this.onButtonSubmit}/>
+          onImageLinkChange={this.onImageLinkChange} 
+          onImageDetectSubmit={this.onImageDetectSubmit}/>
         <FaceRecognition imageUrl={imageUrl} faceRecognitionBoxes={faceRecognitionBoxes}/>
       </div>;
 
     const signInContent = 
-      <SignIn onRouteChange={this.onRouteChange}/>;
+      <SignIn onRouteChange={this.onRouteChange} loadUser={this.loadUser}/>;
 
     const registerContent = 
-      <Register onRouteChange={this.onRouteChange}/>;
+      <Register onRouteChange={this.onRouteChange} loadUser={this.loadUser}/>;
 
     return (
       <div className="App">
