@@ -14,9 +14,6 @@ const db = knex({
     }
 });
 
-db.select('*').from('users')
-    .then(data => console.log(data));
-
 const app = express();
 app.use(bodyParser.json());
 app.use(cors());
@@ -90,16 +87,22 @@ app.post('/register', (req, res) => {
         .then(user => {
             res.json(user[0]);
         })
-        .catch(err => res.status(400).json('Unable to register'));
+        .catch(err => res.status(400).json('Failed to register user'));
 });
 
 app.get('/profile/:id', (req, res) => {
-    const user = getUser(req.params.id);
-    if(user !== null) {
-        return res.json(user);
-    }
-
-    res.status(404).json('Requsted user is not found.');
+    db.select('*').from('users').where({id: req.params.id})
+        .then(user => {
+            if(user.length) {
+                res.json(user[0]);
+            }
+            else {
+                res.status(400).json('User not found');
+            }
+            
+        })
+        .catch(err => res.status(400).json('Error getting user'));
+    
 });
 
 app.put('/image', (req, res) => {
