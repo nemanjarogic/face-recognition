@@ -2,6 +2,20 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const bcrypt = require('bcrypt-nodejs');
 const cors = require('cors');
+const knex = require('knex')
+
+const db = knex({
+    client: 'pg',
+    connection: {
+      host : '127.0.0.1',
+      user : 'postgres',
+      password : 'postgresql',
+      database : 'face-recognition'
+    }
+});
+
+db.select('*').from('users')
+    .then(data => console.log(data));
 
 const app = express();
 app.use(bodyParser.json());
@@ -66,16 +80,17 @@ app.post('/register', (req, res) => {
         console.log(hash);
     });
     
-    database.users.push({
-        id: '125',
-        name,
-        email,
-        password,
-        submitedPhotos: 0,
-        registredTime: new Date()
-    });
-
-    res.json(database.users[database.users.length - 1]);
+    db('users')
+        .returning('*')
+        .insert({
+            email,
+            name,
+            registred_time: new Date()
+        })
+        .then(user => {
+            res.json(user[0]);
+        })
+        .catch(err => res.status(400).json('Unable to register'));
 });
 
 app.get('/profile/:id', (req, res) => {
