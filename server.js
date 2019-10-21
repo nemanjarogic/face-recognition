@@ -18,46 +18,26 @@ const app = express();
 app.use(bodyParser.json());
 app.use(cors());
 
-const database = {
-    users: [
-        {
-            id: '123',
-            name: 'John',
-            email: 'john@gmail.com',
-            password: 'password',
-            submitedPhotos: 0,
-            registredTime: new Date()
-        },
-        {
-            id: '124',
-            name: 'Sally',
-            email: 'sally@gmail.com',
-            password: 'password',
-            submitedPhotos: 0,
-            registredTime: new Date()
-        }
-    ],
-    login: [
-        {
-            id: '123',
-            hash: '',
-            email: 'john@gmail.com'
-        }
-    ]
-}
-
 app.get('/', (req, res) => {
-    res.json(database.users);
+    res.json('Home page');
 });
 
 app.post('/signin', (req, res) => {
-    if(req.body.email === database.users[0].email &&
-        req.body.password === database.users[0].password) {
-        res.json(database.users[0]);
-    }
-    else {
-        res.status(400).json('error');
-    }
+    db.select('email', 'hash').from('login')
+        .where('email', '=', req.body.email)
+        .then(data => {
+            bcrypt.compare(req.body.password, data[0].hash, function(bcryptError, isPasswordValid) {
+                if(isPasswordValid) {
+                    return db.select('*').from('users')
+                        .where('email', '=', req.body.email)
+                        .then(user => res.json(user[0]))
+                        .catch(err => res.status(400).json('Unable to get user'))
+                } else {
+                    res.status(400).json('Wrong credentials');
+                }
+            });
+        })
+        .catch(err => res.status(400).json('Wrong credentials'))
 });
 
 app.post('/register', (req, res) => {
