@@ -28,7 +28,7 @@ class App extends React.Component {
         id: '',
         name: '',
         email: '',
-        submitedPhotos: 0,
+        submittedPhotos: 0,
         registredTime: ''
       }
     }
@@ -52,8 +52,8 @@ class App extends React.Component {
           })
       })
           .then(response => response.json())
-          .then(updatedSubmitedPhotos => {
-              this.setState(Object.assign(this.state.user, { submitedPhotos: updatedSubmitedPhotos }));
+          .then(updatedSubmittedPhotos => {
+              this.setState(Object.assign(this.state.user, { submittedPhotos: updatedSubmittedPhotos }));
           })
        }
        this.displayFaceRecognitionBoxes(this.calculateFaceLocation(response))
@@ -97,7 +97,7 @@ class App extends React.Component {
       id: data.id,
       name: data.name,
       email: data.email,
-      submitedPhotos: data.submitedPhotos,
+      submittedPhotos: data.submittedPhotos,
       registredTime: data.registredTime
     }})
   }
@@ -108,7 +108,7 @@ class App extends React.Component {
     const homeContent = 
       <div>
         <Logo />
-        <Rank name={this.state.user.name} submitedPhotos={this.state.user.submitedPhotos}/>
+        <Rank name={this.state.user.name} submittedPhotos={this.state.user.submittedPhotos}/>
         <ImageLinkForm 
           onImageLinkChange={this.onImageLinkChange} 
           onImageDetectSubmit={this.onImageDetectSubmit}/>
