@@ -1,6 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const bcrypt = require('bcrypt-nodejs');
+const bcrypt = require('bcrypt');
 const cors = require('cors');
 const knex = require('knex')
 
@@ -46,17 +46,6 @@ const database = {
     ]
 }
 
-const getUser = (id) => {
-    for (let i = 0; i < database.users.length; i++) {
-        const user = database.users[i];
-        if (user.id === id) {
-            return user;
-        }
-    }
-
-    return null;
-};
-
 app.get('/', (req, res) => {
     res.json(database.users);
 });
@@ -73,21 +62,33 @@ app.post('/signin', (req, res) => {
 
 app.post('/register', (req, res) => {
     const { email, name, password } = req.body;
-    bcrypt.hash(password, null, null, function(err, hash) {
-        console.log(hash);
+   
+    const saltRounds = 10;
+    bcrypt.genSalt(saltRounds, function(err, salt) {
+        bcrypt.hash(password, salt, function(err, hash) {
+            db.transaction(trx => {
+                trx.insert({
+                    hash,
+                    email
+                })
+                .into('login')
+                .returning('email')
+                .then(loginEmail => {
+                    return trx('users')
+                        .returning('*')
+                        .insert({
+                            email: loginEmail[0],
+                            name,
+                            registred_time: new Date()
+                        })
+                        .then(user => res.json(user[0]))
+                })
+                .then(trx.commit)
+                .catch(trx.rollback)
+            })
+            .catch(err => res.status(400).json('Failed to register user'))
+        });
     });
-    
-    db('users')
-        .returning('*')
-        .insert({
-            email,
-            name,
-            registred_time: new Date()
-        })
-        .then(user => {
-            res.json(user[0]);
-        })
-        .catch(err => res.status(400).json('Failed to register user'));
 });
 
 app.get('/profile/:id', (req, res) => {
@@ -106,16 +107,19 @@ app.get('/profile/:id', (req, res) => {
 });
 
 app.put('/image', (req, res) => {
-    const user = getUser(req.body.id);
-    if(user !== null) {
-        user.submitedPhotos++;
-        return res.json(user.submitedPhotos);
-    }
-
-    res.status(404).json('Requsted user is not found.');
+    console.log('image put stigao');
+    const { id } = req.body;
+    
+    db('users').where('id', '=', id)
+    .increment('submitted_photos', 1)
+    .returning('submitted_photos')
+    .then(submittedPhotos => {
+        res.json(submittedPhotos[0]);
+    })
+    .catch(err => res.status(400).json('Unable to get submitted photos'))
 });
 
 
-app.listen(3000, () => {
-    console.log('Server is running on port 3000...');
+app.listen(3001, () => {
+    console.log('Server is running on port 3001...');
 });
