@@ -18,6 +18,16 @@ const app = express();
 app.use(bodyParser.json());
 app.use(cors());
 
+const mapDatabaseUserToDto = (dbUser) => {
+    return {
+        id: dbUser.id,
+        name: dbUser.name,
+        email: dbUser.email,
+        submittedPhotos: dbUser.submitted_photos,
+        registredTime: dbUser.registred_time
+    };
+}
+
 app.get('/', (req, res) => {
     res.json('Home page');
 });
@@ -30,7 +40,7 @@ app.post('/signin', (req, res) => {
                 if(isPasswordValid) {
                     return db.select('*').from('users')
                         .where('email', '=', req.body.email)
-                        .then(user => res.json(user[0]))
+                        .then(user => res.json(mapDatabaseUserToDto(user[0])))
                         .catch(err => res.status(400).json('Unable to get user'))
                 } else {
                     res.status(400).json('Wrong credentials');
@@ -61,7 +71,7 @@ app.post('/register', (req, res) => {
                             name,
                             registred_time: new Date()
                         })
-                        .then(user => res.json(user[0]))
+                        .then(user => res.json(mapDatabaseUserToDto(user[0])))
                 })
                 .then(trx.commit)
                 .catch(trx.rollback)
@@ -75,7 +85,7 @@ app.get('/profile/:id', (req, res) => {
     db.select('*').from('users').where({id: req.params.id})
         .then(user => {
             if(user.length) {
-                res.json(user[0]);
+                res.json(mapDatabaseUserToDto(user[0]));
             }
             else {
                 res.status(400).json('User not found');
@@ -87,7 +97,6 @@ app.get('/profile/:id', (req, res) => {
 });
 
 app.put('/image', (req, res) => {
-    console.log('image put stigao');
     const { id } = req.body;
     
     db('users').where('id', '=', id)
