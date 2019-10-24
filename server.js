@@ -23,6 +23,8 @@ const db = knex({
     }
 });
 
+
+
 const mapDatabaseUserToDto = (dbUser) => {
     return {
         id: dbUser.id,
@@ -42,6 +44,8 @@ app.post('/register', (req, res) => { register.handleRegister(req, res, db, bcry
 app.get('/profile/:id', (req, res) => { profile.getProfile(req, res, db, mapDatabaseUserToDto) });
 
 app.put('/image', (req, res) => { image.updateSubmittedPhotos(req, res, db) });
+
+app.post('/imageUrl', (req, res) => { image.initializeClarifaiApi(req, res) });
 
 app.listen(3001, () => {
     console.log('Server is running on port 3001...');
