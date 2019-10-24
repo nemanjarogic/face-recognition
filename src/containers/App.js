@@ -1,37 +1,39 @@
 import React from 'react';
 import Clarifai from 'clarifai';
 import Particles from 'react-particles-js';
-import { clarifaiApiKey, particlesConfiguration } from './config';
-import SignIn from './components/SignIn/SignIn';
-import Register from './components/Register/Register';
-import Navigation from './components/Navigation/Navigation';
-import Logo from './components/Logo/Logo';
-import ImageLinkForm from './components/ImageLinkForm/ImageLinkForm';
-import Rank from './components/Rank/Rank';
-import FaceRecognition from './components/FaceRecognition/FaceRecognition';
+import { clarifaiApiKey, particlesConfiguration } from '../config';
+import SignIn from '../components/SignIn/SignIn';
+import Register from '../components/Register/Register';
+import Navigation from '../components/Navigation/Navigation';
+import Logo from '../components/Logo/Logo';
+import ImageLinkForm from '../components/ImageLinkForm/ImageLinkForm';
+import Rank from '../components/Rank/Rank';
+import FaceRecognition from '../components/FaceRecognition/FaceRecognition';
 import './App.css';
 
 const app = new Clarifai.App({
   apiKey: clarifaiApiKey
 });
 
+const initialState = {
+  input: '',
+  imageUrl: '',
+  faceRecognitionBoxes: [],
+  route:'signin',
+  isUserSignedIn: false,
+  user: {
+    id: '',
+    name: '',
+    email: '',
+    submittedPhotos: 0,
+    registredTime: ''
+  }
+};
+
 class App extends React.Component {
   constructor() {
     super();
-    this.state = {
-      input: '',
-      imageUrl: '',
-      faceRecognitionBoxes: [],
-      route:'signin',
-      isUserSignedIn: false,
-      user: {
-        id: '',
-        name: '',
-        email: '',
-        submittedPhotos: 0,
-        registredTime: ''
-      }
-    }
+    this.state = initialState;
   }
 
   onImageLinkChange = (event) => {
@@ -55,6 +57,7 @@ class App extends React.Component {
           .then(updatedSubmittedPhotos => {
               this.setState(Object.assign(this.state.user, { submittedPhotos: updatedSubmittedPhotos }));
           })
+          .catch(console.log)
        }
        this.displayFaceRecognitionBoxes(this.calculateFaceLocation(response))
      })
@@ -84,7 +87,7 @@ class App extends React.Component {
 
   onRouteChange = (route) => {
     if (route === 'signout') {
-      this.setState({isUserSignedIn: false});
+      this.setState(initialState);
     } else if(route === 'home') {
       this.setState({isUserSignedIn: true});
     }
