@@ -18,6 +18,6 @@ __Make sure that Node.js and NPM are installed__
 2) Run `npm start`
 3) Be sure that [server](https://github.com/nemanjarogic/face-recognition-server) is successfully initialized
 
-# To-do
+### To-do
 
 This web application is created for specific educational purposes, so many features such as profile view, advanced validation etc. can be added to improve user experience and codebase.
