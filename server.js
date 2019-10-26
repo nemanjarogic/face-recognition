@@ -23,8 +23,6 @@ const db = knex({
     }
 });
 
-
-
 const mapDatabaseUserToDto = (dbUser) => {
     return {
         id: dbUser.id,
