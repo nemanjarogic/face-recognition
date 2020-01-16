@@ -12,12 +12,23 @@ Node.js and Express.js are used for the back-end, as well as a PostgreSQL databa
 
 ## How to run
 
-__Make sure that Node.js and NPM are installed__
+Make sure that Node.js and NPM are installed
+
+__Backend__
+
+1) Install the dependencies using `npm install`
+2) Create face-recognition PostgreSQL database 
+3) Initialize 'login' and 'users' table in database using scripts in /postgresql folder on the server
+4) Configure database connection in server.js
+5) Register to [Clarafai](https://www.clarifai.com/) and change limited API key
+6) Run `npm start`
+
+__Frontend__
 
 1) Install the dependencies using `npm install`
 2) Run `npm start`
-3) Be sure that [server](https://github.com/nemanjarogic/face-recognition-server) is successfully initialized
 
 ### To-do
 
 This web application is created for specific educational purposes, so many features such as profile view, advanced validation etc. can be added to improve user experience and codebase.
+
