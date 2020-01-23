@@ -109,12 +109,7 @@ class App extends React.Component {
   };
 
   render() {
-    const {
-      isUserSignedIn,
-      imageUrl,
-      route,
-      faceRecognitionBoxes
-    } = this.state;
+    const { imageUrl, faceRecognitionBoxes } = this.state;
 
     const homeContent = (
       <div>
@@ -134,7 +129,7 @@ class App extends React.Component {
       </div>
     );
 
-    return <div>{route === "home" && homeContent}</div>;
+    return <div>{homeContent}</div>;
   }
 }
 

@@ -1,17 +1,21 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { BrowserRouter } from "react-router-dom";
+import { Router } from "react-router-dom";
+import { Provider } from "react-redux";
 import * as serviceWorker from "./serviceWorker";
 
+import store from "./store/store";
+import { history } from "./helpers";
 import App from "./App";
 
 import "tachyons";
-import "./index.css";
 
 ReactDOM.render(
-  <BrowserRouter>
-    <App />
-  </BrowserRouter>,
+  <Provider store={store}>
+    <Router history={history}>
+      <App />
+    </Router>
+  </Provider>,
   document.getElementById("root")
 );
 

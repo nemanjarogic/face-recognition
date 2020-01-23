@@ -1,17 +1,13 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 
-const Header = ({ onRouteChange, isUserSignedIn }) => {
+const Header = ({ isUserSignedIn }) => {
   if (isUserSignedIn) {
     return (
       <nav style={{ display: "flex", justifyContent: "flex-end" }}>
-        <p
-          className="f3 link dim black pa3 pointer"
-          onClick={() => onRouteChange("signout")}
-        >
-          {" "}
-          Log Out{" "}
-        </p>
+        <NavLink className="f3 link dim black pa3 pointer" to="/logout">
+          Log Out
+        </NavLink>
       </nav>
     );
   } else {

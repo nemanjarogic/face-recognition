@@ -1,4 +1,6 @@
 import React from "react";
+import { connect } from "react-redux";
+import { authenticationActions } from "../../../store/actions";
 
 class SignUp extends React.Component {
   constructor(props) {
@@ -23,22 +25,10 @@ class SignUp extends React.Component {
   };
 
   onRegisterSubmit = () => {
-    fetch("http://localhost:3001/register", {
-      method: "post",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        name: this.state.name,
-        email: this.state.email,
-        password: this.state.password
-      })
-    })
-      .then(response => response.json())
-      .then(user => {
-        if (user.id) {
-          this.props.loadUser(user);
-          this.props.onRouteChange("home");
-        }
-      });
+    const { name, email, password } = this.state;
+    if (name && email && password) {
+      this.props.signUp({ name, email, password });
+    }
   };
 
   render() {
@@ -100,4 +90,16 @@ class SignUp extends React.Component {
   }
 }
 
-export default SignUp;
+const mapStateToProps = state => {
+  return {
+    isSignUpInProgress: state.authentication.isSignUpInProgress
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    signUp: user => dispatch(authenticationActions.signUp(user))
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(SignUp);
