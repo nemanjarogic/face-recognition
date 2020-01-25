@@ -1,6 +1,12 @@
 import React from "react";
 import { connect } from "react-redux";
+import Form from "react-bootstrap/Form";
+import Button from "react-bootstrap/Button";
+import Nav from "react-bootstrap/Nav";
+
 import { authenticationActions } from "../../../store/actions";
+
+import "./Login.css";
 
 class Login extends React.Component {
   constructor(props) {
@@ -19,7 +25,8 @@ class Login extends React.Component {
     this.setState({ loginPassword: event.target.value });
   };
 
-  onLoginSubmit = () => {
+  onLoginSubmit = event => {
+    event.preventDefault();
     const { loginEmail, loginPassword } = this.state;
     if (loginEmail && loginPassword) {
       this.props.login(loginEmail, loginPassword);
@@ -27,58 +34,48 @@ class Login extends React.Component {
   };
 
   render() {
-    //const { onRouteChange } = this.props;
-
     return (
-      <article className="br3 ba b--black-10 mv4 w-100 w-50-m w-30-l mw6 shadow-5 center">
-        <main className="pa4 black-80">
-          <div className="measure">
-            <fieldset id="sign_up" className="ba b--transparent ph0 mh0">
-              <legend className="f1 fw6 ph0 mh0">Log In</legend>
-              <div className="mt3">
-                <label className="db fw6 lh-copy f6" htmlFor="email-address">
-                  Email
-                </label>
-                <input
-                  onChange={this.onEmailChange}
+      <div>
+        <article className="br3 ba b--black-10 mv4 w-100 w-50-m w-30-l mw6 shadow-5 center">
+          <main className="pa4 black-80">
+            <legend className="f1 fw6 ph0 mh0">Log In</legend>
+            <Form>
+              <Form.Group controlId="formGroupEmail">
+                <Form.Label>Email address</Form.Label>
+                <Form.Control
+                  className="bg-transparent border-dark"
                   type="email"
-                  name="email-address"
-                  id="email-address"
-                  className="pa2 input-reset ba bg-transparent hover-bg-black hover-white w-100"
+                  onChange={this.onEmailChange}
                 />
-              </div>
-              <div className="mv3">
-                <label className="db fw6 lh-copy f6" htmlFor="password">
-                  Password
-                </label>
-                <input
-                  onChange={this.onPasswordChange}
+              </Form.Group>
+              <Form.Group controlId="formGroupPassword">
+                <Form.Label>Password</Form.Label>
+                <Form.Control
+                  className="bg-transparent border-dark"
                   type="password"
-                  name="password"
-                  id="password"
-                  className="b pa2 input-reset ba bg-transparent hover-bg-black hover-white w-100"
+                  onChange={this.onPasswordChange}
                 />
-              </div>
-            </fieldset>
-            <div>
-              <input
+              </Form.Group>
+              <Button
+                variant="outline-dark"
                 type="submit"
-                value="Log In"
                 onClick={this.onLoginSubmit}
-                className="b ph3 pv2 input-reset ba b--black bg-transparent grow pointer f6 dib center"
-              />
-            </div>
-            <div className="lh-copy mt3">
-              <p
-                onClick={() => this.props.history.push("/signup")}
-                className="f6 link dim black db pointer"
               >
-                Register
-              </p>
+                Submit
+              </Button>
+            </Form>
+            <div className="mt-3">
+              <p className="d-inline">Don't have an account yet? </p>
+              <Nav.Link
+                className="sign-up d-inline"
+                onClick={() => this.props.history.push("/signup")}
+              >
+                Sign up
+              </Nav.Link>
             </div>
-          </div>
-        </main>
-      </article>
+          </main>
+        </article>
+      </div>
     );
   }
 }
@@ -92,8 +89,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     login: (email, password) =>
-      dispatch(authenticationActions.login(email, password)),
-    logout: () => dispatch(authenticationActions.logout())
+      dispatch(authenticationActions.login(email, password))
   };
 };
 

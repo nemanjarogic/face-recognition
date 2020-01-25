@@ -7,11 +7,12 @@ import Alert from "./Alert/Alert";
 
 import "./Layout.css";
 
-const Layout = () => {
+const Layout = props => {
   return (
     <Fragment>
       <Particles className="particles" params={particlesConfiguration} />
       <Header />
+      <main style={{ margin: 15 }}>{props.children}</main>
       <Alert />
     </Fragment>
   );

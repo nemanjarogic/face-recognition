@@ -3,7 +3,7 @@ import { Route, Switch, withRouter, Redirect } from "react-router-dom";
 
 import { ProtectedRoute } from "./components/ProtectedRoute/ProtectedRoute";
 
-import Layout from "./components/Layout/Layout";
+import Layout from "./hoc/Layout/Layout";
 import Login from "./components/Authentication/Login/Login";
 import Logout from "./components/Authentication/Logout/Logout";
 import SignUp from "./components/Authentication/SignUp/SignUp";
@@ -28,8 +28,9 @@ const App = props => {
 
   return (
     <div className="App">
-      <Layout />
-      <Suspense fallback={<p>Loading...</p>}>{routes}</Suspense>
+      <Layout>
+        <Suspense fallback={<p>Loading...</p>}>{routes}</Suspense>
+      </Layout>
     </div>
   );
 };
