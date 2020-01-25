@@ -1,4 +1,4 @@
-export function getAuthorizationHeader() {
+export const getAuthorizationHeader = () => {
   // return authorization header with JWT token
   let user = JSON.parse(localStorage.getItem("user"));
 
@@ -7,4 +7,4 @@ export function getAuthorizationHeader() {
   }
 
   return {};
-}
+};

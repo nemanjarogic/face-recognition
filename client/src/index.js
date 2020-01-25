@@ -9,6 +9,7 @@ import { history } from "./helpers";
 import App from "./App";
 
 import "tachyons";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 ReactDOM.render(
   <Provider store={store}>
