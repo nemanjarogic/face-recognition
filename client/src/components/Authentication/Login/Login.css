@@ -39,3 +39,14 @@ button[type="submit"]:hover {
   -moz-transform: scale(1.1, 1.1);
   transition: 1s;
 }
+
+p.validation {
+  color: black;
+  font-size: 0.8rem;
+}
+
+p.validation::before {
+  display: inline;
+  content: "! ";
+  font-weight: bold;
+}

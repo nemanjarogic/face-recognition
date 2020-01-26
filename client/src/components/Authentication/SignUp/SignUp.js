@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { useForm } from "react-hook-form";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import Nav from "react-bootstrap/Nav";
@@ -11,34 +12,17 @@ import TransparentBox from "../../../hoc/TransparentBox/TransparentBox";
 import "./SignUp.css";
 
 const SignUp = props => {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const { register, handleSubmit, errors } = useForm();
+  const dispatch = useDispatch();
 
   const isSignUpInProgress = useSelector(
     state => state.authentication.isSignUpInProgress
   );
-
-  const dispatch = useDispatch();
   const signUp = user => dispatch(authenticationActions.signUp(user));
 
-  const onNameChange = event => {
-    setName(event.target.value);
-  };
-
-  const onEmailChange = event => {
-    setEmail(event.target.value);
-  };
-
-  const onPasswordChange = event => {
-    setPassword(event.target.value);
-  };
-
-  const onSignInSubmit = event => {
-    event.preventDefault();
-    if (name && email && password) {
-      signUp({ name, email, password });
-    }
+  const onSignInSubmit = data => {
+    const { name, email, password } = data;
+    signUp({ name, email, password });
   };
 
   const switchToLogInPage = () => {
@@ -47,35 +31,45 @@ const SignUp = props => {
 
   return (
     <TransparentBox>
-      <div>
-        <legend className="f1 fw6 ph0 mh0 d-inline">Sign Up</legend>
-      </div>
-      <Form>
-        <Form.Group controlId="formGroupEmail">
-          <Form.Label>Name</Form.Label>
+      <legend className="f1 fw6 ph0 mh0 d-inline">Sign Up</legend>
+      <Form onSubmit={handleSubmit(onSignInSubmit)}>
+        <Form.Group controlId="formGroupName">
+          <Form.Label className="font-weight-bold">Name</Form.Label>
           <Form.Control
+            name="name"
             className="bg-transparent border-dark"
             type="text"
-            onChange={onNameChange}
+            ref={register({ required: true })}
           />
+          {errors.name && <p className="validation">Please enter your name</p>}
         </Form.Group>
         <Form.Group controlId="formGroupEmail">
-          <Form.Label>Email</Form.Label>
+          <Form.Label className="font-weight-bold">Email address</Form.Label>
           <Form.Control
+            name="email"
             className="bg-transparent border-dark"
             type="email"
-            onChange={onEmailChange}
+            ref={register({ required: true })}
           />
+          {errors.email && (
+            <p className="validation">Please enter your email address</p>
+          )}
         </Form.Group>
         <Form.Group controlId="formGroupPassword">
-          <Form.Label>Password</Form.Label>
+          <Form.Label className="font-weight-bold">Password</Form.Label>
           <Form.Control
+            name="password"
             className="bg-transparent border-dark"
             type="password"
-            onChange={onPasswordChange}
+            ref={register({ required: true, minLength: 6 })}
           />
+          {errors.password && (
+            <p className="validation">
+              Please enter your password (min 6 characters)
+            </p>
+          )}
         </Form.Group>
-        <Button variant="outline-dark" type="submit" onClick={onSignInSubmit}>
+        <Button variant="outline-dark" type="submit">
           Submit
         </Button>
         {isSignUpInProgress && <Spinner animation="border" size="sm" />}
