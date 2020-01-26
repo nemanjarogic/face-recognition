@@ -19,13 +19,13 @@ input[type="color"]:focus {
   outline: 0 none;
 }
 
-a.sign-up {
+a.log-in {
   color: black;
   font-weight: bold;
   padding: 0;
 }
 
-a.sign-up:hover {
+a.log-in:hover {
   color: rgba(37, 37, 37, 0.8);
 }
 

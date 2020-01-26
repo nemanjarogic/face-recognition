@@ -1,105 +1,93 @@
-import React from "react";
-import { connect } from "react-redux";
+import React, { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import Form from "react-bootstrap/Form";
+import Button from "react-bootstrap/Button";
+import Nav from "react-bootstrap/Nav";
+import Spinner from "react-bootstrap/Spinner";
+
 import { authenticationActions } from "../../../store/actions";
+import TransparentBox from "../../../hoc/TransparentBox/TransparentBox";
 
-class SignUp extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      name: "",
-      email: "",
-      password: ""
-    };
-  }
+import "./SignUp.css";
 
-  onNameChange = event => {
-    this.setState({ name: event.target.value });
+const SignUp = props => {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const isSignUpInProgress = useSelector(
+    state => state.authentication.isSignUpInProgress
+  );
+
+  const dispatch = useDispatch();
+  const signUp = user => dispatch(authenticationActions.signUp(user));
+
+  const onNameChange = event => {
+    setName(event.target.value);
   };
 
-  onEmailChange = event => {
-    this.setState({ email: event.target.value });
+  const onEmailChange = event => {
+    setEmail(event.target.value);
   };
 
-  onPasswordChange = event => {
-    this.setState({ password: event.target.value });
+  const onPasswordChange = event => {
+    setPassword(event.target.value);
   };
 
-  onRegisterSubmit = () => {
-    const { name, email, password } = this.state;
+  const onSignInSubmit = event => {
+    event.preventDefault();
     if (name && email && password) {
-      this.props.signUp({ name, email, password });
+      signUp({ name, email, password });
     }
   };
 
-  render() {
-    return (
-      <article className="br3 ba b--black-10 mv4 w-100 w-50-m w-25-l mw6 shadow-5 center">
-        <main className="pa4 black-80">
-          <div className="measure">
-            <fieldset id="sign_up" className="ba b--transparent ph0 mh0">
-              <legend className="f1 fw6 ph0 mh0">Sign Up</legend>
-              <div className="mt3">
-                <label className="db fw6 lh-copy f6" htmlFor="name">
-                  Name
-                </label>
-                <input
-                  onChange={this.onNameChange}
-                  type="string"
-                  name="name"
-                  id="name"
-                  className="pa2 input-reset ba bg-transparent hover-bg-black hover-white w-100"
-                />
-              </div>
-              <div className="mt3">
-                <label className="db fw6 lh-copy f6" htmlFor="email-address">
-                  Email
-                </label>
-                <input
-                  onChange={this.onEmailChange}
-                  type="email"
-                  name="email-address"
-                  id="email-address"
-                  className="pa2 input-reset ba bg-transparent hover-bg-black hover-white w-100"
-                />
-              </div>
-              <div className="mv3">
-                <label className="db fw6 lh-copy f6" htmlFor="password">
-                  Password
-                </label>
-                <input
-                  onChange={this.onPasswordChange}
-                  type="password"
-                  name="password"
-                  id="password"
-                  className="b pa2 input-reset ba bg-transparent hover-bg-black hover-white w-100"
-                />
-              </div>
-            </fieldset>
-            <div>
-              <input
-                onClick={this.onRegisterSubmit}
-                type="submit"
-                value="Sign Up"
-                className="b ph3 pv2 input-reset ba b--black bg-transparent grow pointer f6 dib"
-              />
-            </div>
-          </div>
-        </main>
-      </article>
-    );
-  }
-}
-
-const mapStateToProps = state => {
-  return {
-    isSignUpInProgress: state.authentication.isSignUpInProgress
+  const switchToLogInPage = () => {
+    props.history.push("/login");
   };
+
+  return (
+    <TransparentBox>
+      <div>
+        <legend className="f1 fw6 ph0 mh0 d-inline">Sign Up</legend>
+      </div>
+      <Form>
+        <Form.Group controlId="formGroupEmail">
+          <Form.Label>Name</Form.Label>
+          <Form.Control
+            className="bg-transparent border-dark"
+            type="text"
+            onChange={onNameChange}
+          />
+        </Form.Group>
+        <Form.Group controlId="formGroupEmail">
+          <Form.Label>Email</Form.Label>
+          <Form.Control
+            className="bg-transparent border-dark"
+            type="email"
+            onChange={onEmailChange}
+          />
+        </Form.Group>
+        <Form.Group controlId="formGroupPassword">
+          <Form.Label>Password</Form.Label>
+          <Form.Control
+            className="bg-transparent border-dark"
+            type="password"
+            onChange={onPasswordChange}
+          />
+        </Form.Group>
+        <Button variant="outline-dark" type="submit" onClick={onSignInSubmit}>
+          Submit
+        </Button>
+        {isSignUpInProgress && <Spinner animation="border" size="sm" />}
+      </Form>
+      <div className="mt-3">
+        <p className="d-inline">Already have an account? </p>
+        <Nav.Link className="log-in d-inline" onClick={switchToLogInPage}>
+          Log In
+        </Nav.Link>
+      </div>
+    </TransparentBox>
+  );
 };
 
-const mapDispatchToProps = dispatch => {
-  return {
-    signUp: user => dispatch(authenticationActions.signUp(user))
-  };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(SignUp);
+export default SignUp;
