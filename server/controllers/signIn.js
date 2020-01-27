@@ -23,13 +23,17 @@ const handleSignIn = (req, res, db, bcrypt, mapDatabaseUserToDto) => {
               returnUser.token = "fake-jwt-token";
               res.json(returnUser);
             })
-            .catch(err => res.status(400).json("Unable to get user"));
+            .catch(err =>
+              res.status(400).json("Connection error. Please try again later.")
+            );
         } else {
-          res.status(400).json("Wrong credentials");
+          res.status(400).json("Incorrect username or password.");
         }
       });
     })
-    .catch(err => res.status(400).json("Wrong credentials"));
+    .catch(err =>
+      res.status(400).json("An error occurred. Please try again later.")
+    );
 };
 
 module.exports = {
