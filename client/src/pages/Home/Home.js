@@ -3,9 +3,11 @@ import { useSelector } from "react-redux";
 
 import { apiAxios } from "../../helpers";
 import Logo from "../../components/Logo/Logo";
-import ImageLinkForm from "../../components/ImageLinkForm/ImageLinkForm";
-import Rank from "../../components/Rank/Rank";
-import FaceRecognition from "../../components/FaceRecognition/FaceRecognition";
+import ImageLinkForm from "./ImageLinkForm/ImageLinkForm";
+import Rank from "./Rank/Rank";
+import FaceRecognition from "./FaceRecognition/FaceRecognition";
+
+import logoUrl from "./images/logo.png";
 
 const Home = () => {
   const [inputUrl, setInputUrl] = useState("");
@@ -31,7 +33,7 @@ const Home = () => {
         apiAxios
           .put("/image", { id: user.id })
           .then(updateResponse => {
-            const updatedSubmittedPhotos = updateResponse.data;
+            //const updatedSubmittedPhotos = updateResponse.data;
             // this.setState(
             //   Object.assign(user, {
             //     submittedPhotos: updatedSubmittedPhotos
@@ -64,7 +66,7 @@ const Home = () => {
 
   return (
     <Fragment>
-      <Logo />
+      <Logo logoUrl={logoUrl} description="Face Recognition Logo" />
       <Rank name={user.name} submittedPhotos={user.submittedPhotos} />
       <ImageLinkForm
         onImageLinkChange={onImageLinkChange}

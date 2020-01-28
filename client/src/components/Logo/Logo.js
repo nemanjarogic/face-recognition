@@ -1,18 +1,14 @@
 import React from "react";
 import Tilt from "react-tilt";
-import "./Logo.css";
-import logo from "./images/logo.png";
 
-const Logo = () => {
+import "./Logo.css";
+
+const Logo = props => {
   return (
-    <div className="ma4 mt0 center">
-      <Tilt
-        className="Tilt br2 shadow-2"
-        options={{ max: 50 }}
-        style={{ height: 120, width: 120 }}
-      >
-        <div className="Tilt-inner pa1">
-          <img alt="Face Recognition Logo" src={logo} />
+    <div className="center">
+      <Tilt className="Tilt" options={{ max: 50 }}>
+        <div className="Tilt-inner">
+          <img alt={props.description} src={props.logoUrl} />
         </div>
       </Tilt>
     </div>

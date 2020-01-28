@@ -1,8 +1,8 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import { history } from "../../../helpers";
-import { alertActions } from "../../../store/actions";
+import { history } from "../../helpers";
+import { alertActions } from "../../store/actions";
 
 const Alert = () => {
   const alertType = useSelector(state => state.alert.type);

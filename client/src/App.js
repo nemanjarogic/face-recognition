@@ -4,7 +4,7 @@ import { Route, Switch, withRouter, Redirect } from "react-router-dom";
 import { ProtectedRoute } from "./components/ProtectedRoute/ProtectedRoute";
 
 import Layout from "./hoc/Layout/Layout";
-import Login from "./components/Authentication/Login/Login";
+import Login from "./pages/Login/Login";
 import Logout from "./components/Authentication/Logout/Logout";
 import SignUp from "./components/Authentication/SignUp/SignUp";
 

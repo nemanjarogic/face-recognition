@@ -6,8 +6,8 @@ import Button from "react-bootstrap/Button";
 import Nav from "react-bootstrap/Nav";
 import Spinner from "react-bootstrap/Spinner";
 
-import { authenticationActions } from "../../../store/actions";
-import TransparentBox from "../../../hoc/TransparentBox/TransparentBox";
+import { authenticationActions } from "../../store/actions";
+import TransparentBox from "../../hoc/TransparentBox/TransparentBox";
 
 import "./Login.css";
 
