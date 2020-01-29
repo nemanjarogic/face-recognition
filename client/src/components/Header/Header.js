@@ -2,11 +2,10 @@ import React from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import Nav from "react-bootstrap/Nav";
-import Dropdown from "react-bootstrap/Dropdown";
-import DropdownButton from "react-bootstrap/DropdownButton";
-import Button from "react-bootstrap/Button";
+import NavDropdown from "react-bootstrap/NavDropdown";
 
 import Navigation from "./Navigation/Navigation";
+import userIcon from "../../assets/images/user.png";
 import "./Header.css";
 
 const Header = () => {
@@ -24,7 +23,7 @@ const Header = () => {
   // <Nav.Link href="/logout">Log Out</Nav.Link>
   // Use react-router-dom or react-router-bootstrap for handling SPA
 
-  let navigation = (
+  let navigationItems = (
     <Navigation>
       <Nav.Link as={Link} to="/login">
         Log In
@@ -36,24 +35,31 @@ const Header = () => {
   );
 
   if (isUserLoggedIn) {
-    return (
+    const userDropdown = (
+      <span>
+        <img src={userIcon} className="user-icon" alt="User icon" />
+        {userName}
+      </span>
+    );
+
+    navigationItems = (
       <Navigation>
-        <Button variant="transparent" as={Link} to="/">
+        <Nav.Link as={Link} to="/">
           Home
-        </Button>
-        <DropdownButton variant="transparent" title={userName}>
-          <Dropdown.Item as={Link} to="/profile">
+        </Nav.Link>
+        <NavDropdown title={userDropdown}>
+          <NavDropdown.Item as={Link} to="/profile">
             Your Profile
-          </Dropdown.Item>
-          <Dropdown.Item as={Link} to="/logout">
+          </NavDropdown.Item>
+          <NavDropdown.Item as={Link} to="/logout">
             Log Out
-          </Dropdown.Item>
-        </DropdownButton>
+          </NavDropdown.Item>
+        </NavDropdown>
       </Navigation>
     );
   }
 
-  return navigation;
+  return navigationItems;
 };
 
 export default Header;

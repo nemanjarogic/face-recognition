@@ -3,8 +3,8 @@ import { useSelector } from "react-redux";
 
 import { apiAxios } from "../../helpers";
 import Logo from "../../components/Logo/Logo";
-import ImageLinkForm from "./ImageLinkForm/ImageLinkForm";
 import UserStatistics from "../../components/UserStatistics/UserStatistics";
+import PhotoUrlForm from "./PhotoUrlForm/PhotoUrlForm";
 import FaceRecognition from "./FaceRecognition/FaceRecognition";
 
 import logoUrl from "./images/logo.png";
@@ -68,7 +68,7 @@ const Home = () => {
     <Fragment>
       <Logo logoUrl={logoUrl} description="Face Recognition Logo" />
       <UserStatistics name={user.name} submittedPhotos={user.submittedPhotos} />
-      <ImageLinkForm
+      <PhotoUrlForm
         onImageLinkChange={onImageLinkChange}
         onImageDetectSubmit={onImageDetectSubmit}
       />

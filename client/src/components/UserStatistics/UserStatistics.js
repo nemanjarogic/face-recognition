@@ -1,41 +1,34 @@
 import React from "react";
-import Container from "react-bootstrap/Container";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
 import Badge from "react-bootstrap/Badge";
 
 import "./UserStatistics.css";
 
 const UserStatistics = ({ submittedPhotos }) => {
   return (
-    <Container className="mb-5 mt-2">
-      <Row className="row justify-content-center">
-        <Col>
-          <p className="info text-white d-inline">{`Submitted photos: `}</p>
-        </Col>
-        <Col>
+    <div className="mb-5 mt-3">
+      <div className="row">
+        <p className="info text-white">Submitted photos:</p>
+        <div>
           <Badge
             variant="transparent"
-            className="d-inline border border-light text-white"
+            className="border border-light text-white"
           >
             {`${submittedPhotos}`}
           </Badge>
-        </Col>
-      </Row>
-      <Row className="mt-2 row justify-content-center">
-        <Col className="col justify-self-end">
-          <p className="info text-white d-inline">{`Recognized faces: `}</p>
-        </Col>
-        <Col>
+        </div>
+      </div>
+      <div className="row">
+        <p className="info text-white">Recognized faces:</p>
+        <div>
           <Badge
             variant="transparent"
-            className="d-inline border border-light text-white"
+            className="border border-light text-white"
           >
             {`${submittedPhotos}`}
           </Badge>
-        </Col>
-      </Row>
-    </Container>
+        </div>
+      </div>
+    </div>
   );
 };
 

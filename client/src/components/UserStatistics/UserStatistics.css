@@ -1,12 +1,17 @@
+.row {
+  display: flex;
+  justify-content: center;
+}
+
+p.info {
+  font-size: 1.5rem;
+  width: 210px;
+  margin: 2px;
+}
+
 .badge {
   font-size: 1.3rem;
   margin-left: 5px;
   margin-right: 5px;
   padding: 5px;
-}
-
-p.info {
-  font-size: 1.5rem;
-  margin: 3px;
-  padding: 0px;
 }

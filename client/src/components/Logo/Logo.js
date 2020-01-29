@@ -3,12 +3,12 @@ import Tilt from "react-tilt";
 
 import "./Logo.css";
 
-const Logo = props => {
+const Logo = ({ logoUrl, description }) => {
   return (
     <div className="center">
       <Tilt className="Tilt" options={{ max: 50 }}>
         <div className="Tilt-inner">
-          <img alt={props.description} src={props.logoUrl} />
+          <img alt={description} src={logoUrl} />
         </div>
       </Tilt>
     </div>
