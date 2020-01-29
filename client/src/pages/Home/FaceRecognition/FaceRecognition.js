@@ -12,7 +12,7 @@ const FaceRecognition = ({ imageUrl, faceRecognitionBoxes }) => {
           height="auto"
           src={imageUrl}
         />
-
+        {/* put some fancy image border */}
         {faceRecognitionBoxes.map((box, index) => (
           <div
             key={index}

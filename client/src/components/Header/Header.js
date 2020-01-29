@@ -1,9 +1,12 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import Nav from "react-bootstrap/Nav";
+import Dropdown from "react-bootstrap/Dropdown";
+import DropdownButton from "react-bootstrap/DropdownButton";
+import Button from "react-bootstrap/Button";
 
 import Navigation from "./Navigation/Navigation";
-import Nav from "react-bootstrap/Nav";
 import "./Header.css";
 
 const Header = () => {
@@ -11,6 +14,10 @@ const Header = () => {
     state =>
       state.authentication.user != null &&
       state.authentication.user.token != null
+  );
+
+  const userName = useSelector(state =>
+    state.authentication.user != null ? state.authentication.user.name : ""
   );
 
   // Default Nav.Link usage (listed below) will refresh page
@@ -31,9 +38,17 @@ const Header = () => {
   if (isUserLoggedIn) {
     return (
       <Navigation>
-        <Nav.Link as={Link} to="/logout">
-          Log Out
-        </Nav.Link>
+        <Button variant="transparent" as={Link} to="/">
+          Home
+        </Button>
+        <DropdownButton variant="transparent" title={userName}>
+          <Dropdown.Item as={Link} to="/profile">
+            Your Profile
+          </Dropdown.Item>
+          <Dropdown.Item as={Link} to="/logout">
+            Log Out
+          </Dropdown.Item>
+        </DropdownButton>
       </Navigation>
     );
   }

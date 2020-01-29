@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 import { apiAxios } from "../../helpers";
 import Logo from "../../components/Logo/Logo";
 import ImageLinkForm from "./ImageLinkForm/ImageLinkForm";
-import Rank from "./Rank/Rank";
+import UserStatistics from "../../components/UserStatistics/UserStatistics";
 import FaceRecognition from "./FaceRecognition/FaceRecognition";
 
 import logoUrl from "./images/logo.png";
@@ -67,7 +67,7 @@ const Home = () => {
   return (
     <Fragment>
       <Logo logoUrl={logoUrl} description="Face Recognition Logo" />
-      <Rank name={user.name} submittedPhotos={user.submittedPhotos} />
+      <UserStatistics name={user.name} submittedPhotos={user.submittedPhotos} />
       <ImageLinkForm
         onImageLinkChange={onImageLinkChange}
         onImageDetectSubmit={onImageDetectSubmit}
