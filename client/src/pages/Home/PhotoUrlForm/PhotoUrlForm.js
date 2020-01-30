@@ -4,7 +4,7 @@ import Form from "react-bootstrap/Form";
 
 import "./PhotoUrlForm.css";
 
-const PhotoUrlForm = ({ onImageLinkChange, onImageDetectSubmit }) => {
+const PhotoUrlForm = ({ onPhotoUrlChange, onDetectFacesSubmit }) => {
   return (
     <Fragment>
       <p className="introduction">
@@ -15,9 +15,9 @@ const PhotoUrlForm = ({ onImageLinkChange, onImageDetectSubmit }) => {
           <Form.Control
             type="text"
             placeholder="Photo URL"
-            onChange={onImageLinkChange}
+            onChange={onPhotoUrlChange}
           />
-          <Button variant="dark" onClick={onImageDetectSubmit}>
+          <Button variant="dark" onClick={onDetectFacesSubmit}>
             Detect
           </Button>
         </div>

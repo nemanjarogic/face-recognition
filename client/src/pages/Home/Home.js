@@ -6,22 +6,24 @@ import Logo from "../../components/Logo/Logo";
 import UserStatistics from "../../components/UserStatistics/UserStatistics";
 import PhotoUrlForm from "./PhotoUrlForm/PhotoUrlForm";
 import FaceRecognition from "./FaceRecognition/FaceRecognition";
+import SaveRecognitionModal from "./SaveRecognitionModal/SaveRecognitionModal";
 
 import logoUrl from "./images/logo.png";
 
 const Home = () => {
   const [inputUrl, setInputUrl] = useState("");
-  const [submittedImageUrl, setSubmittedImageUrl] = useState("");
+  const [submittedPhotoUrl, setSubmittedPhotoUrl] = useState("");
   const [faceRecognitionBoxes, setFaceRecognitionBoxes] = useState([]);
+  const [isModalVisible, setIsModalVisible] = useState(false);
 
   const user = useSelector(state => state.authentication.user);
 
-  const onImageLinkChange = event => {
+  const onPhotoUrlChange = event => {
     setInputUrl(event.target.value);
   };
 
-  const onImageDetectSubmit = () => {
-    setSubmittedImageUrl(inputUrl);
+  const onDetectFacesSubmit = () => {
+    setSubmittedPhotoUrl(inputUrl);
 
     apiAxios
       .post("/imageurl", { input: inputUrl })
@@ -48,7 +50,7 @@ const Home = () => {
   };
 
   const calculateFaceLocation = data => {
-    const image = document.getElementById("inputImage");
+    const image = document.getElementById("recognition-image");
     const width = Number(image.width);
     const height = Number(image.height);
 
@@ -69,12 +71,32 @@ const Home = () => {
       <Logo logoUrl={logoUrl} description="Face Recognition Logo" />
       <UserStatistics name={user.name} submittedPhotos={user.submittedPhotos} />
       <PhotoUrlForm
-        onImageLinkChange={onImageLinkChange}
-        onImageDetectSubmit={onImageDetectSubmit}
+        onPhotoUrlChange={onPhotoUrlChange}
+        onDetectFacesSubmit={onDetectFacesSubmit}
       />
-      <FaceRecognition
-        imageUrl={submittedImageUrl}
-        faceRecognitionBoxes={faceRecognitionBoxes}
+      <div>
+        <FaceRecognition
+          imageUrl={submittedPhotoUrl}
+          faceRecognitionBoxes={faceRecognitionBoxes}
+          onSaveRecognitionRequest={() => setIsModalVisible(true)}
+        />
+      </div>
+
+      {/* {faceRecognitionBoxes.length && (
+        <div>
+          <Button
+            variant="dark"
+            id="btn-save"
+            onClick={() => setIsModalVisible(true)}
+          >
+            Save Recognition
+          </Button>
+        </div>
+      )} */}
+
+      <SaveRecognitionModal
+        show={isModalVisible}
+        onHide={() => setIsModalVisible(false)}
       />
     </Fragment>
   );

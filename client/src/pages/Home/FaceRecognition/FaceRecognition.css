@@ -1,11 +1,73 @@
-.bounding-box {
-    position: absolute;
-    box-shadow: 0 0 0 3px #007991 inset;
-    display: -ms-flexbox;
-    display: flex;
-    -ms-flex-wrap: wrap;
-    flex-wrap: wrap;
-    -ms-flex-pack: center;
-    justify-content: center;
-    cursor: pointer;
+.recognition-outer-containter {
+  margin-top: 20px;
+}
+
+#recognition-image {
+  width: 500px;
+  height: auto;
+}
+
+.recognition-draw-box {
+  position: absolute;
+  box-shadow: 0 0 0 3px #007991 inset;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  -ms-flex-pack: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+#btn-save-recognition {
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
+
+#recognition-image-containter {
+  --borderWidth: 3px;
+  position: relative;
+  border-radius: var(--borderWidth);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5px;
+  font-family: "Raleway";
+  font-size: 2.5rem;
+}
+
+#recognition-image-containter:after {
+  content: "";
+  position: absolute;
+  top: calc(-1 * var(--borderWidth));
+  left: calc(-1 * var(--borderWidth));
+  height: calc(100% + var(--borderWidth) * 2);
+  width: calc(100% + var(--borderWidth) * 2);
+  background: linear-gradient(
+    60deg,
+    #131312,
+    #a5a5a5,
+    #252424,
+    #161718,
+    #383838,
+    #abacac,
+    #a5a5a5,
+    #0a0a0a
+  );
+  border-radius: calc(2 * var(--borderWidth));
+  z-index: -1;
+  animation: animatedgradient 6s ease alternate infinite;
+  background-size: 300% 300%;
+}
+
+@keyframes animatedgradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
 }
