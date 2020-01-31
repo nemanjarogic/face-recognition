@@ -1,11 +1,14 @@
 const bcrypt = require("bcrypt");
-const { convertDatabaseUser } = require("../helpers/dbModelConverter");
+const { db } = require("../db/dbConnection");
+const { convertDatabaseUser } = require("../db/dbModelConverter");
 
-const handleSignUp = (req, res, db) => {
+const handleSignUp = (req, res) => {
   const { email, name, password } = req.body;
 
   if (!email || !name || !password) {
-    return res.status(400).json("Invalid form submission");
+    return res
+      .status(400)
+      .json("Name, email and password are required for sign up.");
   }
 
   const saltRounds = 10;
@@ -31,7 +34,11 @@ const handleSignUp = (req, res, db) => {
           })
           .then(trx.commit)
           .catch(trx.rollback);
-      }).catch(err => res.status(400).json("Failed to register user"));
+      }).catch(err => {
+        console.log("An error occurred while handling user sign up.");
+        console.log(err);
+        res.status(400).json("An error occurred. Please try again later.");
+      });
     });
   });
 };

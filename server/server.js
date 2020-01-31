@@ -1,40 +1,36 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
-const knex = require("knex");
 const dotenv = require("dotenv");
-
-const { getPostreSqlConnectionConfig } = require("./config/dbConnection");
-const signUpController = require("./controllers/signup");
-const loginController = require("./controllers/login");
-const profile = require("./controllers/profile");
-const image = require("./controllers/image");
 
 const app = express();
 app.use(bodyParser.json());
 app.use(cors());
-
 dotenv.config();
-const db = knex(getPostreSqlConnectionConfig());
+
+const signUpController = require("./controllers/signup");
+const loginController = require("./controllers/login");
+const profile = require("./controllers/user");
+const image = require("./controllers/image");
 
 app.get("/", (req, res) => {
-  res.json("Hello from default route by face recognition server.");
+  res.json("Greetings from default route by face recognition server.");
 });
 
 app.post("/login", (req, res) => {
-  loginController.handleLogIn(req, res, db);
+  loginController.handleLogIn(req, res);
 });
 
 app.post("/signup", (req, res) => {
-  signUpController.handleSignUp(req, res, db);
+  signUpController.handleSignUp(req, res);
 });
 
 app.get("/profile/:id", (req, res) => {
-  profile.getProfile(req, res, db);
+  profile.getProfile(req, res);
 });
 
 app.put("/image", (req, res) => {
-  image.updateSubmittedPhotos(req, res, db);
+  image.updateSubmittedPhotos(req, res);
 });
 
 app.post("/imageUrl", (req, res) => {
