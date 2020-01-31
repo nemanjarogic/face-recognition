@@ -12,8 +12,11 @@ const handleSignUp = (req, res) => {
   }
 
   const saltRounds = 10;
-  bcrypt.genSalt(saltRounds, function(err, salt) {
-    bcrypt.hash(password, salt, function(err, hash) {
+
+  bcrypt
+    .genSalt(saltRounds)
+    .then(salt => bcrypt.hash(password, salt))
+    .then(hash => {
       db.transaction(trx => {
         trx
           .insert({
@@ -33,14 +36,17 @@ const handleSignUp = (req, res) => {
               .then(user => res.json(convertDatabaseUser(user[0])));
           })
           .then(trx.commit)
-          .catch(trx.rollback);
-      }).catch(err => {
-        console.log("An error occurred while handling user sign up.");
-        console.log(err);
-        res.status(400).json("An error occurred. Please try again later.");
+          .catch(err => {
+            res.status(400).json("An error occurred. Please try again later.");
+            trx.rollback();
+          });
       });
+    })
+    .catch(err => {
+      console.log("An error occurred while handling user sign up.");
+      console.log(err);
+      res.status(400).json("An error occurred. Please try again later.");
     });
-  });
 };
 
 module.exports = {

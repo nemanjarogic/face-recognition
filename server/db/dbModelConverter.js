@@ -4,6 +4,7 @@ const convertDatabaseUser = dbUser => {
     name: dbUser.name,
     email: dbUser.email,
     submittedPhotos: dbUser.submitted_photos,
+    recognizedFaces: dbUser.recognized_faces,
     registredTime: dbUser.registred_time
   };
 };
