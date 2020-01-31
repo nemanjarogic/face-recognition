@@ -42,6 +42,7 @@ const FaceRecognition = ({
             ></div>
           );
         })}
+
         <div ref={saveRecognitionDivRef}>
           <Button
             id="btn-save-recognition"

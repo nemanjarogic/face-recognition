@@ -49,6 +49,10 @@ const Home = () => {
       .catch(err => console.log(err));
   };
 
+  const onSaveRecognitionsSubmit = description => {
+    console.log(description);
+  };
+
   const calculateFaceLocation = data => {
     const image = document.getElementById("recognition-image");
     const width = Number(image.width);
@@ -74,29 +78,16 @@ const Home = () => {
         onPhotoUrlChange={onPhotoUrlChange}
         onDetectFacesSubmit={onDetectFacesSubmit}
       />
-      <div>
-        <FaceRecognition
-          imageUrl={submittedPhotoUrl}
-          faceRecognitionBoxes={faceRecognitionBoxes}
-          onSaveRecognitionRequest={() => setIsModalVisible(true)}
-        />
-      </div>
-
-      {/* {faceRecognitionBoxes.length && (
-        <div>
-          <Button
-            variant="dark"
-            id="btn-save"
-            onClick={() => setIsModalVisible(true)}
-          >
-            Save Recognition
-          </Button>
-        </div>
-      )} */}
+      <FaceRecognition
+        imageUrl={submittedPhotoUrl}
+        faceRecognitionBoxes={faceRecognitionBoxes}
+        onSaveRecognitionRequest={() => setIsModalVisible(true)}
+      />
 
       <SaveRecognitionModal
         show={isModalVisible}
         onHide={() => setIsModalVisible(false)}
+        onSaveRecognitionsSubmit={onSaveRecognitionsSubmit}
       />
     </Fragment>
   );

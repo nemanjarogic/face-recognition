@@ -2,3 +2,15 @@
   background-color: white;
   color: black;
 }
+
+#input-description {
+  width: 100%;
+}
+
+#btn-save-recognition:disabled {
+  cursor: not-allowed;
+}
+
+.modal-header {
+  height: 60px;
+}
