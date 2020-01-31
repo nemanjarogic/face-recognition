@@ -47,6 +47,7 @@ const FaceRecognition = ({
           <Button
             id="btn-save-recognition"
             variant="dark"
+            disabled={!faceRecognitionBoxes.length}
             onClick={onSaveRecognitionRequest}
           >
             Save Recognition
