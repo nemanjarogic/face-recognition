@@ -1,4 +1,7 @@
-const handleSignIn = (req, res, db, bcrypt, mapDatabaseUserToDto) => {
+const bcrypt = require("bcrypt");
+const { convertDatabaseUser } = require("../helpers/dbModelConverter");
+
+const handleLogIn = (req, res, db) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
@@ -19,7 +22,7 @@ const handleSignIn = (req, res, db, bcrypt, mapDatabaseUserToDto) => {
             .from("users")
             .where("email", "=", email)
             .then(user => {
-              const returnUser = mapDatabaseUserToDto(user[0]);
+              const returnUser = convertDatabaseUser(user[0]);
               returnUser.token = "fake-jwt-token";
               res.json(returnUser);
             })
@@ -31,11 +34,13 @@ const handleSignIn = (req, res, db, bcrypt, mapDatabaseUserToDto) => {
         }
       });
     })
-    .catch(err =>
-      res.status(400).json("An error occurred. Please try again later.")
-    );
+    .catch(err => {
+      console.log("An error occurred while handling user log in.");
+      console.log(err);
+      res.status(400).json("An error occurred. Please try again later.");
+    });
 };
 
 module.exports = {
-  handleSignIn: handleSignIn
+  handleLogIn: handleLogIn
 };

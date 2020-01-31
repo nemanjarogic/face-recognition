@@ -1,6 +1,9 @@
-const handleRegister = (req, res, db, bcrypt, mapDatabaseUserToDto) => {
+const bcrypt = require("bcrypt");
+const { convertDatabaseUser } = require("../helpers/dbModelConverter");
+
+const handleSignUp = (req, res, db) => {
   const { email, name, password } = req.body;
-  console.log(req.body);
+
   if (!email || !name || !password) {
     return res.status(400).json("Invalid form submission");
   }
@@ -24,7 +27,7 @@ const handleRegister = (req, res, db, bcrypt, mapDatabaseUserToDto) => {
                 name,
                 registred_time: new Date()
               })
-              .then(user => res.json(mapDatabaseUserToDto(user[0])));
+              .then(user => res.json(convertDatabaseUser(user[0])));
           })
           .then(trx.commit)
           .catch(trx.rollback);
@@ -34,5 +37,5 @@ const handleRegister = (req, res, db, bcrypt, mapDatabaseUserToDto) => {
 };
 
 module.exports = {
-  handleRegister: handleRegister
+  handleSignUp: handleSignUp
 };

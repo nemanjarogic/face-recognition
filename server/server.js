@@ -1,11 +1,12 @@
 const express = require("express");
 const bodyParser = require("body-parser");
-const bcrypt = require("bcrypt");
 const cors = require("cors");
 const knex = require("knex");
+const dotenv = require("dotenv");
 
-const register = require("./controllers/register");
-const signIn = require("./controllers/signIn");
+const { getPostreSqlConnectionConfig } = require("./config/dbConnection");
+const signUpController = require("./controllers/signup");
+const loginController = require("./controllers/login");
 const profile = require("./controllers/profile");
 const image = require("./controllers/image");
 
@@ -13,40 +14,23 @@ const app = express();
 app.use(bodyParser.json());
 app.use(cors());
 
-const db = knex({
-  client: "pg",
-  connection: {
-    host: "127.0.0.1",
-    user: "postgres",
-    password: "postgresql",
-    database: "face-recognition"
-  }
-});
-
-const mapDatabaseUserToDto = dbUser => {
-  return {
-    id: dbUser.id,
-    name: dbUser.name,
-    email: dbUser.email,
-    submittedPhotos: dbUser.submitted_photos,
-    registredTime: dbUser.registred_time
-  };
-};
+dotenv.config();
+const db = knex(getPostreSqlConnectionConfig());
 
 app.get("/", (req, res) => {
-  res.json("Home page");
+  res.json("Hello from default route by face recognition server.");
 });
 
 app.post("/login", (req, res) => {
-  signIn.handleSignIn(req, res, db, bcrypt, mapDatabaseUserToDto);
+  loginController.handleLogIn(req, res, db);
 });
 
 app.post("/signup", (req, res) => {
-  register.handleRegister(req, res, db, bcrypt, mapDatabaseUserToDto);
+  signUpController.handleSignUp(req, res, db);
 });
 
 app.get("/profile/:id", (req, res) => {
-  profile.getProfile(req, res, db, mapDatabaseUserToDto);
+  profile.getProfile(req, res, db);
 });
 
 app.put("/image", (req, res) => {
@@ -57,6 +41,6 @@ app.post("/imageUrl", (req, res) => {
   image.initializeClarifaiApi(req, res);
 });
 
-app.listen(3001, () => {
-  console.log("Server is running on port 3001...");
+app.listen(process.env.PORT, () => {
+  console.log(`Server is running on port ${process.env.PORT}...`);
 });
