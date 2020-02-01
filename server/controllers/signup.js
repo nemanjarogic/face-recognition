@@ -20,20 +20,21 @@ const handleSignUp = (req, res) => {
       db.transaction(trx => {
         trx
           .insert({
-            hash,
-            email
+            name,
+            email,
+            registred_time: new Date()
           })
-          .into("login")
-          .returning("email")
-          .then(loginEmail => {
-            return trx("users")
-              .returning("*")
+          .into("users")
+          .returning("*")
+          .then(users => {
+            //Insert first into 'users' table due to foreign key, then after storing hash into 'login' table return user to frontend
+
+            return trx("login")
               .insert({
-                email: loginEmail[0],
-                name,
-                registred_time: new Date()
+                hash,
+                email
               })
-              .then(user => res.json(convertDatabaseUser(user[0])));
+              .then(() => res.json(convertDatabaseUser(users[0])));
           })
           .then(trx.commit)
           .catch(err => {

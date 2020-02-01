@@ -11,18 +11,13 @@ import SaveRecognitionModal from "./SaveRecognitionModal/SaveRecognitionModal";
 import logoUrl from "./images/logo.png";
 
 const Home = () => {
-  const [inputUrl, setInputUrl] = useState("");
   const [submittedPhotoUrl, setSubmittedPhotoUrl] = useState("");
   const [faceRecognitionBoxes, setFaceRecognitionBoxes] = useState([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
 
   const user = useSelector(state => state.authentication.user);
 
-  const onPhotoUrlChange = event => {
-    setInputUrl(event.target.value);
-  };
-
-  const onDetectFacesSubmit = () => {
+  const onDetectFacesSubmit = inputUrl => {
     setSubmittedPhotoUrl(inputUrl);
 
     apiAxios
@@ -74,10 +69,8 @@ const Home = () => {
     <Fragment>
       <Logo logoUrl={logoUrl} description="Face Recognition Logo" />
       <UserStatistics name={user.name} submittedPhotos={user.submittedPhotos} />
-      <PhotoUrlForm
-        onPhotoUrlChange={onPhotoUrlChange}
-        onDetectFacesSubmit={onDetectFacesSubmit}
-      />
+
+      <PhotoUrlForm onDetectFacesSubmit={onDetectFacesSubmit} />
       <FaceRecognition
         imageUrl={submittedPhotoUrl}
         faceRecognitionBoxes={faceRecognitionBoxes}

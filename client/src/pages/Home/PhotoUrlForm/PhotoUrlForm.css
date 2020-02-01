@@ -2,8 +2,15 @@ p.introduction {
   font-size: 1.5rem;
 }
 
-.btn {
+#btn-detect {
   width: 30%;
+}
+
+#btn-detect:disabled {
+  cursor: not-allowed;
+  transform: none;
+  -webkit-transform: none;
+  -moz-transform: none;
 }
 
 .btn:hover {

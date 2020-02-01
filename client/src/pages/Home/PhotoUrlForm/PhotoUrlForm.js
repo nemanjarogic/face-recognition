@@ -1,10 +1,26 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useState } from "react";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 
 import "./PhotoUrlForm.css";
 
-const PhotoUrlForm = ({ onPhotoUrlChange, onDetectFacesSubmit }) => {
+const PhotoUrlForm = ({ onDetectFacesSubmit }) => {
+  const [inputUrl, setInputUrl] = useState("");
+  const [submittedInputUrl, setSubmittedInputUrl] = useState("");
+
+  const onPhotoUrlChange = event => {
+    setInputUrl(event.target.value);
+  };
+
+  const onPhotoDetection = () => {
+    if (inputUrl === submittedInputUrl) {
+      return;
+    }
+
+    setSubmittedInputUrl(inputUrl);
+    onDetectFacesSubmit(inputUrl);
+  };
+
   return (
     <Fragment>
       <p className="introduction">
@@ -17,7 +33,12 @@ const PhotoUrlForm = ({ onPhotoUrlChange, onDetectFacesSubmit }) => {
             placeholder="Photo URL"
             onChange={onPhotoUrlChange}
           />
-          <Button variant="dark" onClick={onDetectFacesSubmit}>
+          <Button
+            id="btn-detect"
+            variant="dark"
+            onClick={onPhotoDetection}
+            disabled={inputUrl === submittedInputUrl}
+          >
             Detect
           </Button>
         </div>
