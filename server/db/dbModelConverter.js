@@ -9,6 +9,15 @@ const convertDatabaseUser = dbUser => {
   };
 };
 
+const getRecognitionStatisticsUser = dbUser => {
+  return {
+    id: dbUser.id,
+    submittedPhotos: dbUser.submitted_photos,
+    recognizedFaces: dbUser.recognized_faces
+  };
+};
+
 module.exports = {
-  convertDatabaseUser
+  convertDatabaseUser,
+  getRecognitionStatisticsUser
 };

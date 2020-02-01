@@ -54,6 +54,7 @@ const signUp = user => {
       .then(user => {
         dispatch(signUpSuccess(user));
         history.push("/login");
+
         dispatch(
           alertActions.showSuccessNotification(
             "You have successfully signed up!"

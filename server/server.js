@@ -11,7 +11,7 @@ dotenv.config();
 const signUpController = require("./controllers/signup");
 const loginController = require("./controllers/login");
 const userController = require("./controllers/user");
-const imageController = require("./controllers/image");
+const recognitionController = require("./controllers/recognition");
 
 app.get("/", (req, res) => {
   res.json("Greetings from default route by face recognition server.");
@@ -29,12 +29,16 @@ app.get("/profile/:id", (req, res) => {
   userController.getProfile(req, res);
 });
 
-app.post("/imageUrl", (req, res) => {
-  imageController.initializeClarifaiApi(req, res);
+app.get("/statistics/:id", (req, res) => {
+  userController.getUserRecognitionStatistics(req, res);
 });
 
-app.put("/image", (req, res) => {
-  imageController.updateSubmittedPhotos(req, res);
+app.post("/recognize", (req, res) => {
+  recognitionController.initializeClarifaiApi(req, res);
+});
+
+app.put("/update", (req, res) => {
+  recognitionController.updateRecognitionStatistics(req, res);
 });
 
 app.listen(process.env.PORT, () => {

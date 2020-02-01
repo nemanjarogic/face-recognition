@@ -1,18 +1,41 @@
 const { db } = require("../db/dbConnection");
-const { convertDatabaseUser } = require("../db/dbModelConverter");
+const {
+  convertDatabaseUser,
+  getRecognitionStatisticsUser
+} = require("../db/dbModelConverter");
 
 const getProfile = (req, res) => {
   db.select("*")
     .from("users")
     .where({ id: req.params.id })
-    .then(user => {
-      if (user.length) {
-        res.json(convertDatabaseUser(user[0]));
-      } else {
-        res.status(400).json("User not found");
+    .then(users => {
+      if (!users.length) {
+        return res.status(400).json("User not found");
       }
+
+      res.json(convertDatabaseUser(users[0]));
     })
-    .catch(err => res.status(400).json("Error getting user"));
+    .catch(err =>
+      res.status(400).json("An error occurred while retrieving user data.")
+    );
+};
+
+const getUserRecognitionStatistics = (req, res) => {
+  db.select("*")
+    .from("users")
+    .where({ id: req.params.id })
+    .then(users => {
+      if (!users.length) {
+        return res.status(400).json("User not found");
+      }
+
+      res.json(getRecognitionStatisticsUser(users[0]));
+    })
+    .catch(err =>
+      res
+        .status(400)
+        .json("An error occurred while retrieving user recognition statistics.")
+    );
 };
 
 const getUserByEmail = email => {
@@ -20,12 +43,13 @@ const getUserByEmail = email => {
     .select("*")
     .from("users")
     .where("email", "=", email)
-    .then(user => {
-      return convertDatabaseUser(user[0]);
+    .then(users => {
+      return convertDatabaseUser(users[0]);
     });
 };
 
 module.exports = {
   getProfile: getProfile,
-  getUserByEmail: getUserByEmail
+  getUserByEmail: getUserByEmail,
+  getUserRecognitionStatistics: getUserRecognitionStatistics
 };

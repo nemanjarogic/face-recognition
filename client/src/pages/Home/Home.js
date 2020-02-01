@@ -1,5 +1,5 @@
-import React, { Fragment, useState } from "react";
-import { useSelector } from "react-redux";
+import React, { Fragment, useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 
 import { apiAxios } from "../../helpers";
 import Logo from "../../components/Logo/Logo";
@@ -7,6 +7,7 @@ import UserStatistics from "../../components/UserStatistics/UserStatistics";
 import PhotoUrlForm from "./PhotoUrlForm/PhotoUrlForm";
 import FaceRecognition from "./FaceRecognition/FaceRecognition";
 import SaveRecognitionModal from "./SaveRecognitionModal/SaveRecognitionModal";
+import { userActions } from "../../store/actions";
 
 import logoUrl from "./images/logo.png";
 
@@ -15,31 +16,33 @@ const Home = () => {
   const [faceRecognitionBoxes, setFaceRecognitionBoxes] = useState([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
 
-  const user = useSelector(state => state.authentication.user);
+  const userId = useSelector(state => state.authentication.user.id);
+  const dispatch = useDispatch();
+
+  const updateRecognitionStatistics = newlyRecongizedFaces => {
+    const user = { id: userId, recognizedFaces: newlyRecongizedFaces };
+    dispatch(userActions.updateRecognitionStatistics(user));
+  };
+
+  useEffect(() => {
+    const user = { id: userId };
+    dispatch(userActions.fetchRecognitionStatistics(user));
+  }, [dispatch, userId]);
 
   const onDetectFacesSubmit = inputUrl => {
     setSubmittedPhotoUrl(inputUrl);
 
     apiAxios
-      .post("/imageurl", { input: inputUrl })
+      .post("/recognize", { input: inputUrl })
       .then(response => {
         if (!response.data) {
           return;
         }
 
-        apiAxios
-          .put("/image", { id: user.id })
-          .then(updateResponse => {
-            //const updatedSubmittedPhotos = updateResponse.data;
-            // this.setState(
-            //   Object.assign(user, {
-            //     submittedPhotos: updatedSubmittedPhotos
-            //   })
-            // );
-          })
-          .catch(console.log);
-
         setFaceRecognitionBoxes(calculateFaceLocation(response.data));
+        updateRecognitionStatistics(
+          response.data.outputs[0].data.regions.length
+        );
       })
       .catch(err => console.log(err));
   };
@@ -68,7 +71,7 @@ const Home = () => {
   return (
     <Fragment>
       <Logo logoUrl={logoUrl} description="Face Recognition Logo" />
-      <UserStatistics name={user.name} submittedPhotos={user.submittedPhotos} />
+      <UserStatistics />
 
       <PhotoUrlForm onDetectFacesSubmit={onDetectFacesSubmit} />
       <FaceRecognition
@@ -76,7 +79,6 @@ const Home = () => {
         faceRecognitionBoxes={faceRecognitionBoxes}
         onSaveRecognitionRequest={() => setIsModalVisible(true)}
       />
-
       <SaveRecognitionModal
         show={isModalVisible}
         onHide={() => setIsModalVisible(false)}

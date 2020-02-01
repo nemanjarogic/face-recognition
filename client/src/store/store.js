@@ -1,7 +1,9 @@
 import { createStore, applyMiddleware, compose, combineReducers } from "redux";
 import thunkMiddleware from "redux-thunk";
+
 import authenticationReducer from "./reducers/authentication.reducers";
 import alertReducer from "./reducers/alert.reducers";
+import userReducer from "./reducers/user.reducers";
 
 const composeEnhancers =
   (process.env.NODE_ENV === "development"
@@ -10,7 +12,8 @@ const composeEnhancers =
 
 const rootReducer = combineReducers({
   authentication: authenticationReducer,
-  alert: alertReducer
+  alert: alertReducer,
+  user: userReducer
 });
 
 const store = createStore(

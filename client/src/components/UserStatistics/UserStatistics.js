@@ -1,9 +1,13 @@
 import React from "react";
+import { useSelector } from "react-redux";
 import Badge from "react-bootstrap/Badge";
 
 import "./UserStatistics.css";
 
-const UserStatistics = ({ submittedPhotos }) => {
+const UserStatistics = () => {
+  const submittedPhotos = useSelector(state => state.user.submittedPhotos);
+  const recognizedFaces = useSelector(state => state.user.recognizedFaces);
+
   return (
     <div className="mb-5 mt-3">
       <div className="row">
@@ -13,7 +17,7 @@ const UserStatistics = ({ submittedPhotos }) => {
             variant="transparent"
             className="border border-light text-white"
           >
-            {`${submittedPhotos}`}
+            {submittedPhotos}
           </Badge>
         </div>
       </div>
@@ -24,7 +28,7 @@ const UserStatistics = ({ submittedPhotos }) => {
             variant="transparent"
             className="border border-light text-white"
           >
-            {`${submittedPhotos}`}
+            {recognizedFaces}
           </Badge>
         </div>
       </div>
