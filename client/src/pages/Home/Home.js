@@ -1,4 +1,4 @@
-import React, { Fragment, useState, useEffect } from "react";
+import React, { Fragment, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
 import { apiAxios } from "../../helpers";
@@ -23,11 +23,6 @@ const Home = () => {
     const user = { id: userId, recognizedFaces: newlyRecongizedFaces };
     dispatch(userActions.updateRecognitionStatistics(user));
   };
-
-  useEffect(() => {
-    const user = { id: userId };
-    dispatch(userActions.fetchRecognitionStatistics(user));
-  }, [dispatch, userId]);
 
   const onDetectFacesSubmit = inputUrl => {
     setSubmittedPhotoUrl(inputUrl);

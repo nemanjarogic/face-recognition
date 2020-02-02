@@ -1,12 +1,22 @@
-import React from "react";
-import { useSelector } from "react-redux";
+import React, { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import Badge from "react-bootstrap/Badge";
+
+import { userActions } from "../../store/actions";
 
 import "./UserStatistics.css";
 
 const UserStatistics = () => {
+  const userId = useSelector(state => state.authentication.user.id);
   const submittedPhotos = useSelector(state => state.user.submittedPhotos);
   const recognizedFaces = useSelector(state => state.user.recognizedFaces);
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const user = { id: userId };
+    dispatch(userActions.fetchRecognitionStatistics(user));
+  }, [dispatch, userId]);
 
   return (
     <div className="mb-5 mt-3">
