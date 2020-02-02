@@ -1,18 +1,25 @@
 import { apiAxios } from "../helpers";
 
-const fetchRecognitionStatistics = user => {
+const getSavedRecognitions = user => {
   return apiAxios
-    .get(`/statistics/${user.id}`)
+    .get(`/recognitions`)
     .then(response => {
+      console.log(response);
       return response.data;
     })
     .catch(handleApiError);
 };
 
-const updateRecognitionStatistics = user => {
+const saveRecognition = (user, description, photoUrl) => {
+  const params = {
+    user,
+    description,
+    photoUrl
+  };
   return apiAxios
-    .put("/update-statistics", user)
+    .post("/save-recognition", params)
     .then(response => {
+      console.log(response);
       return response.data;
     })
     .catch(handleApiError);
@@ -29,6 +36,6 @@ const handleApiError = error => {
 };
 
 export const userService = {
-  fetchRecognitionStatistics,
-  updateRecognitionStatistics
+  getSavedRecognitions,
+  saveRecognition
 };

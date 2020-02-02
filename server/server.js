@@ -12,6 +12,7 @@ const signUpController = require("./controllers/signup");
 const loginController = require("./controllers/login");
 const userController = require("./controllers/user");
 const recognitionController = require("./controllers/recognition");
+const savedRecognitionsController = require("./controllers/savedRecognitions");
 
 app.get("/", (req, res) => {
   res.json("Greetings from default route by face recognition server.");
@@ -33,12 +34,20 @@ app.get("/statistics/:id", (req, res) => {
   userController.getUserRecognitionStatistics(req, res);
 });
 
-app.post("/recognize", (req, res) => {
-  recognitionController.initializeClarifaiApi(req, res);
+app.put("/update-statistics", (req, res) => {
+  userController.updateRecognitionStatistics(req, res);
 });
 
-app.put("/update", (req, res) => {
-  recognitionController.updateRecognitionStatistics(req, res);
+app.post("/recognize", (req, res) => {
+  recognitionController.recognizeFaces(req, res);
+});
+
+app.get("/recognitions", (req, res) => {
+  savedRecognitionsController.getSavedRecognitions(req, res);
+});
+
+app.post("/save-recognition", (req, res) => {
+  savedRecognitionsController.saveRecognition(req, res);
 });
 
 app.listen(process.env.PORT, () => {
