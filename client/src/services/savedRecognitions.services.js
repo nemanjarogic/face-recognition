@@ -19,7 +19,6 @@ const saveRecognition = (user, description, photoUrl) => {
   return apiAxios
     .post("/save-recognition", params)
     .then(response => {
-      console.log(response);
       return response.data;
     })
     .catch(handleApiError);
@@ -35,7 +34,7 @@ const handleApiError = error => {
   return Promise.reject(data);
 };
 
-export const userService = {
+export const savedRecognitionsService = {
   getSavedRecognitions,
   saveRecognition
 };

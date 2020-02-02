@@ -7,8 +7,8 @@ import UserStatistics from "../../components/UserStatistics/UserStatistics";
 import PhotoUrlForm from "./PhotoUrlForm/PhotoUrlForm";
 import FaceRecognition from "./FaceRecognition/FaceRecognition";
 import SaveRecognitionModal from "./SaveRecognitionModal/SaveRecognitionModal";
-import { userActions } from "../../store/actions";
-
+import { userActions, alertActions } from "../../store/actions";
+import { savedRecognitionsService } from "../../services";
 import logoUrl from "./images/logo.png";
 
 const Home = () => {
@@ -48,7 +48,20 @@ const Home = () => {
   };
 
   const onSaveRecognitionsSubmit = description => {
-    console.log(description);
+    const user = { id: userId };
+
+    savedRecognitionsService
+      .saveRecognition(user, description, submittedPhotoUrl)
+      .then(response => {
+        dispatch(alertActions.showSuccessNotification(response));
+      })
+      .catch(err => {
+        dispatch(
+          alertActions.showErrorNotification(
+            "An error occurred while saving recognition. Please try again later."
+          )
+        );
+      });
   };
 
   const calculateFaceLocation = data => {
