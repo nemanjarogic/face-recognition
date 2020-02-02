@@ -2,9 +2,8 @@ import { apiAxios } from "../helpers";
 
 const getSavedRecognitions = user => {
   return apiAxios
-    .get(`/recognitions`)
+    .get(`/recognitions/${user.id}`)
     .then(response => {
-      console.log(response);
       return response.data;
     })
     .catch(handleApiError);

@@ -17,7 +17,19 @@ const getRecognitionStatisticsUser = dbUser => {
   };
 };
 
+const getSavedUserRecognitions = dbRecognitions => {
+  return dbRecognitions.map(recognition => {
+    return {
+      description: recognition.description,
+      shortPhotoUrl: recognition.short_photo_url,
+      originalPhotoUrl: recognition.original_photo_url,
+      createdTime: recognition.created_time
+    };
+  });
+};
+
 module.exports = {
   convertDatabaseUser,
-  getRecognitionStatisticsUser
+  getRecognitionStatisticsUser,
+  getSavedUserRecognitions
 };

@@ -42,7 +42,7 @@ app.post("/recognize", (req, res) => {
   recognitionController.recognizeFaces(req, res);
 });
 
-app.get("/recognitions", (req, res) => {
+app.get("/recognitions/:id", (req, res) => {
   savedRecognitionsController.getSavedRecognitions(req, res);
 });
 

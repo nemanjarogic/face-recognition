@@ -1,18 +1,22 @@
 const validUrl = require("valid-url");
 const shortid = require("shortid");
 const { db } = require("../db/dbConnection");
+const { getSavedUserRecognitions } = require("../db/dbModelConverter");
 
 const getSavedRecognitions = (req, res) => {
-  console.log("getSavedRecognitions");
-  console.log(req);
-
-  //   const urlCode = req.params.code;
-  //     const item = await UrlShorten.findOne({ urlCode: urlCode });
-  //     if (item) {
-  //       return res.redirect(item.originalUrl);
-  //     } else {
-  //       return res.redirect(errorUrl);
-  //     }
+  return db
+    .select("*")
+    .from("recognitions")
+    .where({ user_id: req.params.id })
+    .then(recognitions => {
+      //Alternative approach for short URL mapping can be achieved with installation of Nginx server and by changing default configuration
+      res.json(getSavedUserRecognitions(recognitions));
+    })
+    .catch(err =>
+      res
+        .status(400)
+        .json("An error occurred while retrieving saved recognitions.")
+    );
 };
 
 const saveRecognition = (req, res) => {
