@@ -1,10 +1,11 @@
 import React, { Suspense } from "react";
-import { Route, Switch, withRouter, Redirect } from "react-router-dom";
+import { Route, Switch, withRouter } from "react-router-dom";
 
 import { ProtectedRoute } from "./components/ProtectedRoute/ProtectedRoute";
 import Layout from "./hoc/Layout/Layout";
 import SignUp from "./pages/SignUp/SignUp";
 import Login from "./pages/Login/Login";
+import NotFound from "./pages/NotFound/NotFound";
 import Logout from "./components/Logout/Logout";
 
 import "./App.css";
@@ -26,7 +27,7 @@ const App = props => {
       <ProtectedRoute path="/profile" component={Profile} />
       <ProtectedRoute path="/home/:shortUrlCode" exact component={Home} />
       <ProtectedRoute path="/" exact component={Home} />
-      <Redirect to="/" />
+      <Route component={NotFound} />
     </Switch>
   );
 

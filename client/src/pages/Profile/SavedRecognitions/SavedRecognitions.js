@@ -33,7 +33,7 @@ const SavedRecognitions = () => {
 
   return (
     <Fragment>
-      <h1>Saved recognitions</h1>
+      <h1 id="recognitions-heading">Saved Recognitions</h1>
       <Table
         id="recognitions"
         striped

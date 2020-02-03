@@ -7,3 +7,10 @@ img#recognize-icon {
   width: 30px;
   height: 30px;
 }
+
+h1#recognitions-heading {
+  background-color: #343a40;
+  color: white;
+  width: 80%;
+  margin: 10px auto;
+}
