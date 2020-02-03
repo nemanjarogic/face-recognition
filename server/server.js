@@ -50,6 +50,10 @@ app.post("/save-recognition", (req, res) => {
   savedRecognitionsController.saveRecognition(req, res);
 });
 
+app.get("/original-photo", (req, res) => {
+  savedRecognitionsController.getOriginalPhotoUrl(req, res);
+});
+
 app.listen(process.env.PORT, () => {
   console.log(`Server is running on port ${process.env.PORT}...`);
 });

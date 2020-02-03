@@ -3,6 +3,39 @@ const shortid = require("shortid");
 const { db } = require("../db/dbConnection");
 const { getSavedUserRecognitions } = require("../db/dbModelConverter");
 
+const getOriginalPhotoUrl = (req, res) => {
+  const { shortCode, userId } = req.query;
+  if (!shortCode || !userId) {
+    return res
+      .status(400)
+      .json(
+        "Short code and user ID are required for retrieving original photo URL."
+      );
+  }
+
+  return db
+    .select("*")
+    .from("recognitions")
+    .where({
+      short_code: shortCode,
+      user_id: userId
+    })
+    .then(recognitions => {
+      if (!recognitions.length) {
+        return res
+          .status(400)
+          .json("Photo with given short code doesn't exist.");
+      }
+
+      res.json(recognitions[0].original_photo_url);
+    })
+    .catch(err => {
+      res
+        .status(400)
+        .json("An error occurred while retrieving original photo URL.");
+    });
+};
+
 const getSavedRecognitions = (req, res) => {
   return db
     .select("*")
@@ -77,5 +110,6 @@ const insertRecognitionToDb = (recognition, res) => {
 
 module.exports = {
   getSavedRecognitions,
-  saveRecognition
+  saveRecognition,
+  getOriginalPhotoUrl
 };

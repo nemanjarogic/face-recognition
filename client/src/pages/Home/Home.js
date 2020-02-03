@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useState, useEffect, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
 import { apiAxios } from "../../helpers";
@@ -9,9 +9,10 @@ import FaceRecognition from "./FaceRecognition/FaceRecognition";
 import SaveRecognitionModal from "./SaveRecognitionModal/SaveRecognitionModal";
 import { userActions, alertActions } from "../../store/actions";
 import { savedRecognitionsService } from "../../services";
-import logoUrl from "./images/logo.png";
 
-const Home = () => {
+import logoUrl from "../../assets/images/logo.png";
+
+const Home = props => {
   const [submittedPhotoUrl, setSubmittedPhotoUrl] = useState("");
   const [faceRecognitionBoxes, setFaceRecognitionBoxes] = useState([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -19,28 +20,41 @@ const Home = () => {
   const userId = useSelector(state => state.authentication.user.id);
   const dispatch = useDispatch();
 
-  const updateRecognitionStatistics = newlyRecongizedFaces => {
-    const user = { id: userId, recognizedFaces: newlyRecongizedFaces };
-    dispatch(userActions.updateRecognitionStatistics(user));
-  };
+  const onDetectFacesSubmit = useCallback(
+    inputUrl => {
+      setSubmittedPhotoUrl(inputUrl);
 
-  const onDetectFacesSubmit = inputUrl => {
-    setSubmittedPhotoUrl(inputUrl);
+      apiAxios
+        .post("/recognize", { input: inputUrl })
+        .then(response => {
+          if (!response.data) {
+            return;
+          }
 
-    apiAxios
-      .post("/recognize", { input: inputUrl })
+          setFaceRecognitionBoxes(calculateFaceLocation(response.data));
+
+          const user = {
+            id: userId,
+            recognizedFaces: response.data.outputs[0].data.regions.length
+          };
+          dispatch(userActions.updateRecognitionStatistics(user));
+        })
+        .catch(err => console.log(err));
+    },
+    [dispatch, userId]
+  );
+
+  useEffect(() => {
+    if (!props.match.params.shortUrlCode) {
+      return;
+    }
+
+    savedRecognitionsService
+      .getOriginalPhotoUrl(props.match.params.shortUrlCode, userId)
       .then(response => {
-        if (!response.data) {
-          return;
-        }
-
-        setFaceRecognitionBoxes(calculateFaceLocation(response.data));
-        updateRecognitionStatistics(
-          response.data.outputs[0].data.regions.length
-        );
-      })
-      .catch(err => console.log(err));
-  };
+        onDetectFacesSubmit(response);
+      });
+  }, [props.match.params.shortUrlCode, userId, onDetectFacesSubmit]);
 
   const onSaveRecognitionsSubmit = description => {
     const user = { id: userId };

@@ -1,5 +1,14 @@
 import { apiAxios } from "../helpers";
 
+const getOriginalPhotoUrl = (shortCode, userId) => {
+  return apiAxios
+    .get(`/original-photo?shortCode=${shortCode}&userId=${userId}`)
+    .then(response => {
+      return response.data;
+    })
+    .catch(handleApiError);
+};
+
 const getSavedRecognitions = user => {
   return apiAxios
     .get(`/recognitions/${user.id}`)
@@ -35,5 +44,6 @@ const handleApiError = error => {
 
 export const savedRecognitionsService = {
   getSavedRecognitions,
-  saveRecognition
+  saveRecognition,
+  getOriginalPhotoUrl
 };

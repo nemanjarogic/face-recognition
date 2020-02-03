@@ -2,3 +2,8 @@ table#recognitions {
   width: 80%;
   margin: auto;
 }
+
+img#recognize-icon {
+  width: 30px;
+  height: 30px;
+}

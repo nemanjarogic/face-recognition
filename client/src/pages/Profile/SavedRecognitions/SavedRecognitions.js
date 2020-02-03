@@ -5,6 +5,7 @@ import Table from "react-bootstrap/Table";
 
 import { savedRecognitionsService } from "../../../services";
 
+import logoUrl from "../../../assets/images/logo.png";
 import "./SavedRecognitions.css";
 
 const SavedRecognitions = () => {
@@ -33,12 +34,20 @@ const SavedRecognitions = () => {
   return (
     <Fragment>
       <h1>Saved recognitions</h1>
-      <Table id="recognitions" striped bordered hover responsive variant="dark">
-        <thead>
+      <Table
+        id="recognitions"
+        striped
+        bordered
+        hover
+        responsive
+        variant="light"
+      >
+        <thead className="thead-dark">
           <tr>
             <th>Description</th>
             <th>Photo URL</th>
             <th>Saved</th>
+            <th>Recognize</th>
           </tr>
         </thead>
         <tbody>
@@ -47,11 +56,24 @@ const SavedRecognitions = () => {
               <tr key={index}>
                 <td>{recognition.description}</td>
                 <td>
-                  <Link to={recognition.originalPhotoUrl}>
+                  <a
+                    href={recognition.originalPhotoUrl}
+                    rel="noopener noreferrer"
+                    target="_blank"
+                  >
                     {recognition.shortPhotoUrl}
-                  </Link>
+                  </a>
                 </td>
                 <td>{formatDate(recognition.createdTime)}</td>
+                <td>
+                  <Link to={`home/${recognition.shortCode}`}>
+                    <img
+                      id="recognize-icon"
+                      src={logoUrl}
+                      alt="Recognize icon"
+                    />
+                  </Link>
+                </td>
               </tr>
             );
           })}
