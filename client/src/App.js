@@ -25,7 +25,7 @@ const App = props => {
       <Route path="/signup" render={props => <SignUp {...props} />} />
       <ProtectedRoute path="/logout" component={Logout} />
       <ProtectedRoute path="/profile" component={Profile} />
-      <ProtectedRoute path="/home/:shortUrlCode" exact component={Home} />
+      <ProtectedRoute path="/home/:shortCode" exact component={Home} />
       <ProtectedRoute path="/" exact component={Home} />
       <Route component={NotFound} />
     </Switch>

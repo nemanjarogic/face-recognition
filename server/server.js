@@ -54,6 +54,10 @@ app.get("/original-photo", (req, res) => {
   savedRecognitionsController.getOriginalPhotoUrl(req, res);
 });
 
+app.get("/redirect-original-photo/:code", (req, res) => {
+  savedRecognitionsController.redirectToOriginalPhoto(req, res);
+});
+
 app.listen(process.env.PORT, () => {
   console.log(`Server is running on port ${process.env.PORT}...`);
 });

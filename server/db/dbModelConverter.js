@@ -23,7 +23,6 @@ const getSavedUserRecognitions = dbRecognitions => {
       description: recognition.description,
       shortPhotoUrl: recognition.short_photo_url,
       shortCode: recognition.short_code,
-      originalPhotoUrl: recognition.original_photo_url,
       createdTime: recognition.created_time
     };
   });

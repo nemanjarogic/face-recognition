@@ -45,16 +45,18 @@ const Home = props => {
   );
 
   useEffect(() => {
-    if (!props.match.params.shortUrlCode) {
+    if (!props.match.params.shortCode) {
       return;
     }
 
+    // Because detect can be requested for both, original and shorten photo URL, and we are on localhost -> find original photo URL.
+    //Face recognition API can't work with localhost shorten URL photos
     savedRecognitionsService
-      .getOriginalPhotoUrl(props.match.params.shortUrlCode, userId)
+      .getOriginalPhotoUrl(props.match.params.shortCode, userId)
       .then(response => {
         onDetectFacesSubmit(response);
       });
-  }, [props.match.params.shortUrlCode, userId, onDetectFacesSubmit]);
+  }, [props.match.params.shortCode, userId, onDetectFacesSubmit]);
 
   const onSaveRecognitionsSubmit = description => {
     const user = { id: userId };

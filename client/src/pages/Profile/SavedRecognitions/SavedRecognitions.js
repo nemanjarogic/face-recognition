@@ -57,7 +57,7 @@ const SavedRecognitions = () => {
                 <td>{recognition.description}</td>
                 <td>
                   <a
-                    href={recognition.originalPhotoUrl}
+                    href={recognition.shortPhotoUrl}
                     rel="noopener noreferrer"
                     target="_blank"
                   >

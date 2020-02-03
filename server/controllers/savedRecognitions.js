@@ -36,6 +36,34 @@ const getOriginalPhotoUrl = (req, res) => {
     });
 };
 
+const redirectToOriginalPhoto = (req, res) => {
+  const { code } = req.params;
+  if (!code) {
+    return res
+      .status(400)
+      .json("Short code is required for retrieving original photo URL");
+  }
+
+  return db
+    .select("*")
+    .from("recognitions")
+    .where({ short_code: code })
+    .then(recognitions => {
+      if (!recognitions.length) {
+        return res
+          .status(400)
+          .json("Photo with given short code doesn't exist.");
+      }
+
+      return res.redirect(recognitions[0].original_photo_url);
+    })
+    .catch(err => {
+      res
+        .status(400)
+        .json("An error occurred while retrieving original photo URL.");
+    });
+};
+
 const getSavedRecognitions = (req, res) => {
   return db
     .select("*")
@@ -111,5 +139,6 @@ const insertRecognitionToDb = (recognition, res) => {
 module.exports = {
   getSavedRecognitions,
   saveRecognition,
-  getOriginalPhotoUrl
+  getOriginalPhotoUrl,
+  redirectToOriginalPhoto
 };
