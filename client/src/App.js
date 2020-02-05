@@ -1,5 +1,6 @@
 import React, { Suspense } from "react";
 import { Route, Switch, withRouter } from "react-router-dom";
+import Spinner from "react-bootstrap/Spinner";
 
 import { ProtectedRoute } from "./components/ProtectedRoute/ProtectedRoute";
 import Layout from "./hoc/Layout/Layout";
@@ -34,7 +35,7 @@ const App = props => {
   return (
     <div className="App">
       <Layout>
-        <Suspense fallback={<p>Loading...</p>}>{routes}</Suspense>
+        <Suspense fallback={<Spinner animation="border" />}>{routes}</Suspense>
       </Layout>
     </div>
   );

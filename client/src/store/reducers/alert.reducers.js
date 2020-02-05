@@ -9,7 +9,7 @@ const reducer = (state = {}, action) => {
       };
     case alertActionTypes.SHOW_ERROR_NOTIFICATION:
       return {
-        type: "alert-dark",
+        type: "alert-danger",
         message: action.message
       };
     case alertActionTypes.CLEAR_NOTIFICATIONS:

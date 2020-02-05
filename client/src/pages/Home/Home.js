@@ -1,14 +1,14 @@
 import React, { Fragment, useState, useEffect, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import Spinner from "react-bootstrap/Spinner";
 
-import { apiAxios } from "../../helpers";
+import { savedRecognitionsService, userService } from "../../services";
+import { userActions, alertActions } from "../../store/actions";
 import Logo from "../../components/Logo/Logo";
 import UserStatistics from "../../components/UserStatistics/UserStatistics";
 import PhotoUrlForm from "./PhotoUrlForm/PhotoUrlForm";
 import FaceRecognition from "./FaceRecognition/FaceRecognition";
 import SaveRecognitionModal from "./SaveRecognitionModal/SaveRecognitionModal";
-import { userActions, alertActions } from "../../store/actions";
-import { savedRecognitionsService } from "../../services";
 
 import logoUrl from "../../assets/images/logo.png";
 
@@ -16,30 +16,29 @@ const Home = props => {
   const [submittedPhotoUrl, setSubmittedPhotoUrl] = useState("");
   const [faceRecognitionBoxes, setFaceRecognitionBoxes] = useState([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isRecognitionInProgress, setIsRecognitionInProgress] = useState(false);
 
   const userId = useSelector(state => state.authentication.user.id);
   const dispatch = useDispatch();
 
   const onDetectFacesSubmit = useCallback(
     inputUrl => {
+      setIsRecognitionInProgress(true);
       setSubmittedPhotoUrl(inputUrl);
 
-      apiAxios
-        .post("/recognize", { input: inputUrl })
-        .then(response => {
-          if (!response.data) {
-            return;
-          }
+      userService.detectFaces(inputUrl).then(response => {
+        if (!response) {
+          return;
+        }
 
-          setFaceRecognitionBoxes(calculateFaceLocation(response.data));
-
-          const user = {
-            id: userId,
-            recognizedFaces: response.data.outputs[0].data.regions.length
-          };
-          dispatch(userActions.updateRecognitionStatistics(user));
-        })
-        .catch(err => console.log(err));
+        setFaceRecognitionBoxes(calculateFaceLocation(response));
+        const user = {
+          id: userId,
+          recognizedFaces: response.outputs[0].data.regions.length
+        };
+        dispatch(userActions.updateRecognitionStatistics(user));
+        setIsRecognitionInProgress(false);
+      });
     },
     [dispatch, userId]
   );
@@ -102,6 +101,7 @@ const Home = props => {
         imageUrl={submittedPhotoUrl}
         faceRecognitionBoxes={faceRecognitionBoxes}
         onSaveRecognitionRequest={() => setIsModalVisible(true)}
+        isRecognitionInProgress={isRecognitionInProgress}
       />
       <SaveRecognitionModal
         show={isModalVisible}

@@ -18,6 +18,15 @@ const updateRecognitionStatistics = user => {
     .catch(handleApiError);
 };
 
+const detectFaces = inputUrl => {
+  return apiAxios
+    .post("/recognize", { input: inputUrl })
+    .then(response => {
+      return response.data;
+    })
+    .catch(handleApiError);
+};
+
 const handleApiError = error => {
   const { status, data } = error.response;
   if (status === 401) {
@@ -30,5 +39,6 @@ const handleApiError = error => {
 
 export const userService = {
   fetchRecognitionStatistics,
-  updateRecognitionStatistics
+  updateRecognitionStatistics,
+  detectFaces
 };

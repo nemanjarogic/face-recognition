@@ -4,6 +4,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { history } from "../../helpers";
 import { alertActions } from "../../store/actions";
 
+import "./Alert.css";
+
 const Alert = () => {
   const alertType = useSelector(state => state.alert.type);
   const alertMessage = useSelector(state => state.alert.message);
@@ -19,7 +21,7 @@ const Alert = () => {
   let alert = null;
   if (alertMessage) {
     alert = (
-      <div className="col-sm-8 col-sm-offset-2 center">
+      <div className="alert-box">
         <div className={`alert ${alertType}`}>{alertMessage}</div>
       </div>
     );

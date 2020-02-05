@@ -1,13 +1,15 @@
 import React, { useRef } from "react";
 import Button from "react-bootstrap/Button";
 import Image from "react-bootstrap/Image";
+import Spinner from "react-bootstrap/Spinner";
 
 import "./FaceRecognition.css";
 
 const FaceRecognition = ({
   imageUrl,
   faceRecognitionBoxes,
-  onSaveRecognitionRequest
+  onSaveRecognitionRequest,
+  isRecognitionInProgress
 }) => {
   const saveRecognitionDivRef = useRef(null);
 
@@ -25,6 +27,9 @@ const FaceRecognition = ({
             alt="Face Recognition Image"
             rounded
           />
+          {isRecognitionInProgress && (
+            <Spinner variant="light" animation="border" />
+          )}
         </div>
 
         {faceRecognitionBoxes.map((box, index) => {
