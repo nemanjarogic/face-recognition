@@ -18,13 +18,11 @@ const Login = props => {
   const isLoggingInProgress = useSelector(
     state => state.authentication.isLoggingInProgress
   );
-  const login = (email, password) =>
-    dispatch(authenticationActions.login(email, password));
 
   const onLoginSubmit = data => {
     //react-hook-form will call this function after successfull validation
     const { email, password } = data;
-    login(email, password);
+    dispatch(authenticationActions.login(email, password));
   };
 
   const switchToSignUpPage = () => {

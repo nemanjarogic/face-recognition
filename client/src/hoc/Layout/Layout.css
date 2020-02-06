@@ -6,3 +6,7 @@
   left: 0;
   z-index: -1;
 }
+
+.main-content {
+  margin: 10px;
+}

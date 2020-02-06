@@ -27,7 +27,7 @@ const getOriginalPhotoUrl = (req, res) => {
           .json("Photo with given short code doesn't exist.");
       }
 
-      res.json(recognitions[0].original_photo_url);
+      return res.json(recognitions[0].original_photo_url);
     })
     .catch(err => {
       res
@@ -70,8 +70,7 @@ const getSavedRecognitions = (req, res) => {
     .from("recognitions")
     .where({ user_id: req.params.id })
     .then(recognitions => {
-      //Alternative approach for short URL mapping can be achieved with installation of Nginx server and by changing default configuration
-      res.json(getSavedUserRecognitions(recognitions));
+      return res.json(getSavedUserRecognitions(recognitions));
     })
     .catch(err =>
       res
@@ -91,7 +90,7 @@ const saveRecognition = (req, res) => {
   isOriginalUrlSaved(photoUrl, userId)
     .then(isPhotoSaved => {
       if (isPhotoSaved) {
-        return res.json("Given photo URL is already saved for user.");
+        return res.json("Photo is already saved in user profile.");
       }
 
       //Alternative approach would be code generation by encoding and decoding integer primary key to base62

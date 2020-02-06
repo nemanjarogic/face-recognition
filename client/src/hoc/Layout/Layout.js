@@ -12,7 +12,7 @@ const Layout = props => {
     <Fragment>
       <Particles className="particles" params={particlesConfiguration} />
       <Header />
-      <main style={{ margin: 15 }}>{props.children}</main>
+      <main className="main-content">{props.children}</main>
       <Alert />
     </Fragment>
   );

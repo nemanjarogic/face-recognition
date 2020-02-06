@@ -1,9 +1,9 @@
 import React, { Fragment, useState, useEffect, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import Spinner from "react-bootstrap/Spinner";
 
 import { savedRecognitionsService, userService } from "../../services";
 import { userActions, alertActions } from "../../store/actions";
+import { getPlainLoggedInUser } from "../../helpers";
 import Logo from "../../components/Logo/Logo";
 import UserStatistics from "../../components/UserStatistics/UserStatistics";
 import PhotoUrlForm from "./PhotoUrlForm/PhotoUrlForm";
@@ -21,65 +21,71 @@ const Home = props => {
   const userId = useSelector(state => state.authentication.user.id);
   const dispatch = useDispatch();
 
+  const handleError = useCallback(
+    (message = "An error occurred. Please try again later.") => {
+      setIsRecognitionInProgress(false);
+      dispatch(alertActions.showErrorNotification(message));
+    },
+    [dispatch]
+  );
+
   const onDetectFacesSubmit = useCallback(
     inputUrl => {
       setIsRecognitionInProgress(true);
       setSubmittedPhotoUrl(inputUrl);
 
-      userService.detectFaces(inputUrl).then(response => {
-        if (!response) {
-          return;
-        }
+      userService
+        .detectFaces(inputUrl)
+        .then(response => {
+          if (!response || isEmptyObject(response.outputs[0].data)) {
+            throw "Please choose another photo for face recognition.";
+          }
 
-        setFaceRecognitionBoxes(calculateFaceLocation(response));
-        const user = {
-          id: userId,
-          recognizedFaces: response.outputs[0].data.regions.length
-        };
-        dispatch(userActions.updateRecognitionStatistics(user));
-        setIsRecognitionInProgress(false);
-      });
+          const regions = response.outputs[0].data.regions;
+          const user = getPlainLoggedInUser();
+          user.recognizedFaces = regions.length;
+
+          setFaceRecognitionBoxes(calculateFaceLocation(regions));
+          dispatch(userActions.updateRecognitionStatistics(user));
+          setIsRecognitionInProgress(false);
+        })
+        .catch(handleError);
     },
-    [dispatch, userId]
+    [dispatch, handleError]
   );
 
   useEffect(() => {
-    if (!props.match.params.shortCode) {
+    const shortCode = props.match.params.shortCode;
+    if (!shortCode) {
       return;
     }
 
     // Because detect can be requested for both, original and shorten photo URL, and we are on localhost -> find original photo URL.
     //Face recognition API can't work with localhost shorten URL photos
     savedRecognitionsService
-      .getOriginalPhotoUrl(props.match.params.shortCode, userId)
-      .then(response => {
-        onDetectFacesSubmit(response);
+      .getOriginalPhotoUrl(shortCode, userId)
+      .then(originalPhotoUrl => {
+        onDetectFacesSubmit(originalPhotoUrl);
       });
   }, [props.match.params.shortCode, userId, onDetectFacesSubmit]);
 
   const onSaveRecognitionsSubmit = description => {
-    const user = { id: userId };
+    const user = getPlainLoggedInUser();
 
     savedRecognitionsService
       .saveRecognition(user, description, submittedPhotoUrl)
       .then(response => {
         dispatch(alertActions.showSuccessNotification(response));
       })
-      .catch(err => {
-        dispatch(
-          alertActions.showErrorNotification(
-            "An error occurred while saving recognition. Please try again later."
-          )
-        );
-      });
+      .catch(handleError);
   };
 
-  const calculateFaceLocation = data => {
+  const calculateFaceLocation = regions => {
     const image = document.getElementById("recognition-image");
     const width = Number(image.width);
     const height = Number(image.height);
 
-    return data.outputs[0].data.regions.map(region => {
+    return regions.map(region => {
       const clarifaiFace = region.region_info.bounding_box;
 
       return {
@@ -89,6 +95,10 @@ const Home = props => {
         bottomRow: height - clarifaiFace.bottom_row * height
       };
     });
+  };
+
+  const isEmptyObject = obj => {
+    return Object.entries(obj).length === 0 && obj.constructor === Object;
   };
 
   return (

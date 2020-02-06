@@ -1,6 +1,6 @@
 const bcrypt = require("bcrypt");
 const { db } = require("../db/dbConnection");
-const { convertDatabaseUser } = require("../db/dbModelConverter");
+const { getUser } = require("../db/dbModelConverter");
 
 const handleSignUp = (req, res) => {
   const { email, name, password } = req.body;
@@ -34,7 +34,7 @@ const handleSignUp = (req, res) => {
                 hash,
                 email
               })
-              .then(() => res.json(convertDatabaseUser(users[0])));
+              .then(() => res.json(getUser(users[0])));
           })
           .then(trx.commit)
           .catch(err => {

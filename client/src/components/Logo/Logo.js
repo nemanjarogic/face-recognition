@@ -8,7 +8,7 @@ const Logo = ({ logoUrl, description }) => {
     <div className="center">
       <Tilt className="Tilt" options={{ max: 50 }}>
         <div className="Tilt-inner">
-          <img alt={description} src={logoUrl} />
+          <img src={logoUrl} alt={description} />
         </div>
       </Tilt>
     </div>

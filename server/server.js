@@ -26,10 +26,6 @@ app.post("/signup", (req, res) => {
   signUpController.handleSignUp(req, res);
 });
 
-app.get("/profile/:id", (req, res) => {
-  userController.getProfile(req, res);
-});
-
 app.get("/statistics/:id", (req, res) => {
   userController.getUserRecognitionStatistics(req, res);
 });

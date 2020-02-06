@@ -1,23 +1,22 @@
 import React, { Fragment, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { useSelector } from "react-redux";
 import Table from "react-bootstrap/Table";
 
 import { savedRecognitionsService } from "../../../services";
+import { getPlainLoggedInUser } from "../../../helpers";
 
 import logoUrl from "../../../assets/images/logo.png";
 import "./SavedRecognitions.css";
 
 const SavedRecognitions = () => {
   const [recognitions, setRecognitions] = useState([]);
-  const userId = useSelector(state => state.authentication.user.id);
 
   useEffect(() => {
-    const user = { id: userId };
+    const user = getPlainLoggedInUser();
     savedRecognitionsService.getSavedRecognitions(user).then(response => {
       setRecognitions(response);
     });
-  }, [userId]);
+  }, []);
 
   const formatDate = date => {
     const dt = new Date(date);

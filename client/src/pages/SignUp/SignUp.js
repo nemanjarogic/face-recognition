@@ -18,11 +18,11 @@ const SignUp = props => {
   const isSignUpInProgress = useSelector(
     state => state.authentication.isSignUpInProgress
   );
-  const signUp = user => dispatch(authenticationActions.signUp(user));
 
   const onSignInSubmit = data => {
     const { name, email, password } = data;
-    signUp({ name, email, password });
+    const user = { name, email, password };
+    dispatch(authenticationActions.signUp(user));
   };
 
   const switchToLogInPage = () => {

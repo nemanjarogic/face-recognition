@@ -1,24 +1,8 @@
 const { db } = require("../db/dbConnection");
 const {
-  convertDatabaseUser,
+  getUser,
   getRecognitionStatisticsUser
 } = require("../db/dbModelConverter");
-
-const getProfile = (req, res) => {
-  db.select("*")
-    .from("users")
-    .where({ id: req.params.id })
-    .then(users => {
-      if (!users.length) {
-        return res.status(400).json("User not found");
-      }
-
-      res.json(convertDatabaseUser(users[0]));
-    })
-    .catch(err =>
-      res.status(400).json("An error occurred while retrieving user data.")
-    );
-};
 
 const getUserByEmail = email => {
   return db
@@ -26,7 +10,7 @@ const getUserByEmail = email => {
     .from("users")
     .where("email", "=", email)
     .then(users => {
-      return convertDatabaseUser(users[0]);
+      return getUser(users[0]);
     });
 };
 
@@ -68,7 +52,6 @@ const updateRecognitionStatistics = (req, res) => {
 };
 
 module.exports = {
-  getProfile: getProfile,
   getUserByEmail: getUserByEmail,
   getUserRecognitionStatistics: getUserRecognitionStatistics,
   updateRecognitionStatistics: updateRecognitionStatistics

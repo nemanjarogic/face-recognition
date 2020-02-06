@@ -48,7 +48,7 @@ const updateRecognitionStatistics = user => {
         dispatch(updateSuccess(user));
         dispatch(
           alertActions.showSuccessNotification(
-            "Recognition statistics is updated."
+            "Recognition statistics is successfully updated."
           )
         );
       })
