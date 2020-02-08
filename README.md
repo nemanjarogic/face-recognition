@@ -1,34 +1,32 @@
 # Face Recognition
 
-Face Recognition is web application that uses [Clarafai API](https://docs.clarifai.com/api-guide/predict) to detect a face in the picture. Application is developed using React.js for the front-end. 
-Node.js and Express.js are used for the back-end, as well as a PostgreSQL database. 
+Face Recognition is web application which you can use to recognize multiple faces for the specified photo. Application is developed using React, Redux, Node, Express as well as a PostgreSQL database.
 
 ## Features
-* Sign in and register user
-* Detect multiple faces in the submitted picture
-* Keep track for number of submitted pictures for every user 
 
-![alt text](https://i.imgur.com/7CQxhyD.png "Face Recognition")
+- Sign up and login (supported validation, JWT and password hashing)
+- Detect multiple faces in submitted photo
+- Keep track for number of submitted photo and number of recognized faces for every user
+- Save and reuse recognized faces from user profile
+- Custom URL shortener for saved recognitions
+
+![alt text](https://github.com/nemanjarogic/face-recognition/blob/master/client/src/assets/images/github.png "Face Recognition")
 
 ## How to run
 
 Make sure that Node.js and NPM are installed
 
-__Backend__
+**Prerequisite**
 
-1) Install the dependencies using `npm install`
-2) Create face-recognition PostgreSQL database 
-3) Initialize 'login' and 'users' table in database using scripts in /postgresql folder on the server
-4) Configure database connection in server.js
-5) Register to [Clarafai](https://www.clarifai.com/) and change limited API key
-6) Run `npm start`
+1. Create face-recognition PostgreSQL database
+2. Initialize tables in database using scripts in server/db/scripts folder
+3. Download nginx to map short URL to original URL (https://nginx.org/)
+4. Open yor `nginx.config` file from nginx/config and add bolded lines
+   `server { listen 80; server_name localhost; **location ~* "^/[0-9a-z@]{5,15}$" { rewrite ^/(.*)$ http://localhost:3001/redirect-original-photo/$1 redirect; } ** }`
+5. Register to [Clarafai](https://www.clarifai.com/) and change limited API key
+6. Run `npm start`
 
-__Frontend__
+**Run**
 
-1) Install the dependencies using `npm install`
-2) Run `npm start`
-
-### To-do
-
-This web application is created for specific educational purposes, so many features such as profile view, advanced validation etc. can be added to improve user experience and codebase.
-
+1. Install the dependencies using `npm install`
+2. Run `npm start`
