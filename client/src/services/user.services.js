@@ -7,7 +7,7 @@ const fetchRecognitionStatistics = user => {
 };
 
 const updateRecognitionStatistics = user => {
-  return apiAxios.put("/update-statisticss", user).then(response => {
+  return apiAxios.put("/update-statistics", user).then(response => {
     return response.data;
   });
 };

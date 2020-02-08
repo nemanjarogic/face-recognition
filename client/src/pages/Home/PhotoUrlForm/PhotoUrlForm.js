@@ -31,6 +31,7 @@ const PhotoUrlForm = ({ onDetectFacesSubmit }) => {
           <Form.Control
             type="text"
             placeholder="Photo URL"
+            ref={input => input && input.focus()}
             onChange={onPhotoUrlChange}
           />
           <Button
