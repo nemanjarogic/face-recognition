@@ -22,7 +22,7 @@ Make sure that Node.js and NPM are installed
 2. Initialize tables in database using scripts in server/db/scripts folder
 3. Download nginx to map short URL to original URL (https://nginx.org/)
 4. Open yor `nginx.config` file from nginx/config and add bolded lines
-   <pre>
+<pre>
    server {
         listen       80;
         server_name  localhost;<b>
@@ -30,7 +30,7 @@ Make sure that Node.js and NPM are installed
 			rewrite ^/(.*)$ http://localhost:3001/redirect-original-photo/$1 redirect;
 		}</b>
    }
-   <pre>
+</pre>
 5. Register to [Clarafai](https://www.clarifai.com/) to obtain API key for face recognition
 6. Add `.env` file in server/ and update configuration
 <pre>
