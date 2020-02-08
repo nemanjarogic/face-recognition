@@ -35,12 +35,12 @@ Make sure that Node.js and NPM are installed
 6. Add `.env` file in server/ and update configuration
 <pre>
 PORT=3001
-DB_USER=postgres
-DB_PASSWORD=postgresql
-DB_NAME=face-recognition
-CLARIFAI_API_KEY=see_step_5
+DB_USER=postgresql_user
+DB_PASSWORD=postgresql_password
+DB_NAME=postgresql_db_name
+CLARIFAI_API_KEY=clarafai_api_key_from_step_5
 BASE_SHORT_URL=http://localhost/
-JWT_SECRET_KEY=jwt
+JWT_SECRET_KEY=jwt_secret_key
 </pre>
 
 **Run**
