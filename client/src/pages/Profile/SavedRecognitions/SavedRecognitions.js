@@ -1,22 +1,46 @@
 import React, { Fragment, useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import Table from "react-bootstrap/Table";
 
 import { savedRecognitionsService } from "../../../services";
+import { alertActions, authenticationActions } from "../../../store/actions";
 import { getPlainLoggedInUser } from "../../../helpers";
 
 import logoUrl from "../../../assets/images/logo.png";
 import "./SavedRecognitions.css";
 
-const SavedRecognitions = () => {
+const SavedRecognitions = props => {
   const [recognitions, setRecognitions] = useState([]);
+  const dispatch = useDispatch();
 
   useEffect(() => {
+    const handleError = err => {
+      const { status } = err.response;
+      if (status === 401) {
+        dispatch(authenticationActions.logout());
+        props.history.push("/logout");
+        window.location.reload(true);
+
+        return;
+      }
+
+      dispatch(
+        alertActions.showErrorNotification(
+          "An error occurred. Please try again later."
+        )
+      );
+    };
+
     const user = getPlainLoggedInUser();
-    savedRecognitionsService.getSavedRecognitions(user).then(response => {
-      setRecognitions(response);
-    });
-  }, []);
+
+    savedRecognitionsService
+      .getSavedRecognitions(user)
+      .then(response => {
+        setRecognitions(response);
+      })
+      .catch(handleError);
+  }, [dispatch, props.history]);
 
   const formatDate = date => {
     const dt = new Date(date);

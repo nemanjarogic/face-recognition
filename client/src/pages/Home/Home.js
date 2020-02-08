@@ -2,7 +2,11 @@ import React, { Fragment, useState, useEffect, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
 import { savedRecognitionsService, userService } from "../../services";
-import { userActions, alertActions } from "../../store/actions";
+import {
+  userActions,
+  alertActions,
+  authenticationActions
+} from "../../store/actions";
 import { getPlainLoggedInUser } from "../../helpers";
 import Logo from "../../components/Logo/Logo";
 import UserStatistics from "../../components/UserStatistics/UserStatistics";
@@ -25,8 +29,10 @@ const Home = props => {
     err => {
       const { status } = err.response;
       if (status === 401) {
+        dispatch(authenticationActions.logout());
         props.history.push("/logout");
         window.location.reload(true);
+
         return;
       }
 

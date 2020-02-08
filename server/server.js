@@ -28,10 +28,16 @@ app.post("/signup", (req, res) => {
 });
 
 app.get("/statistics/:id", (req, res) => {
+  if (!authorizationHelper.isUserAuthorized(req, res)) {
+    return;
+  }
   userController.getUserRecognitionStatistics(req, res);
 });
 
 app.put("/update-statistics", (req, res) => {
+  if (!authorizationHelper.isUserAuthorized(req, res)) {
+    return;
+  }
   userController.updateRecognitionStatistics(req, res);
 });
 
@@ -39,19 +45,27 @@ app.post("/recognize", (req, res) => {
   if (!authorizationHelper.isUserAuthorized(req, res)) {
     return;
   }
-
   recognitionController.recognizeFaces(req, res);
 });
 
 app.get("/recognitions/:id", (req, res) => {
+  if (!authorizationHelper.isUserAuthorized(req, res)) {
+    return;
+  }
   savedRecognitionsController.getSavedRecognitions(req, res);
 });
 
 app.post("/save-recognition", (req, res) => {
+  if (!authorizationHelper.isUserAuthorized(req, res)) {
+    return;
+  }
   savedRecognitionsController.saveRecognition(req, res);
 });
 
 app.get("/original-photo", (req, res) => {
+  if (!authorizationHelper.isUserAuthorized(req, res)) {
+    return;
+  }
   savedRecognitionsController.getOriginalPhotoUrl(req, res);
 });
 

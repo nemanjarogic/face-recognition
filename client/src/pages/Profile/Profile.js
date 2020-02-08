@@ -6,12 +6,12 @@ import SavedRecognitions from "./SavedRecognitions/SavedRecognitions";
 
 import logoUrl from "../../assets/images/user.png";
 
-const Profile = () => {
+const Profile = props => {
   return (
     <Fragment>
       <Logo logoUrl={logoUrl} description="Face Recognition Logo" />
       <UserStatistics />
-      <SavedRecognitions />
+      <SavedRecognitions {...props} />
     </Fragment>
   );
 };
