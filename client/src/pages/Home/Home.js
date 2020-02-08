@@ -1,5 +1,5 @@
 import React, { Fragment, useState, useEffect, useCallback } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 
 import { savedRecognitionsService, userService } from "../../services";
 import {
@@ -22,13 +22,11 @@ const Home = props => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isRecognitionInProgress, setIsRecognitionInProgress] = useState(false);
 
-  const userId = useSelector(state => state.authentication.user.id);
   const dispatch = useDispatch();
 
   const handleError = useCallback(
     err => {
-      const { status } = err.response;
-      if (status === 401) {
+      if (err.response && err.response.status === 401) {
         dispatch(authenticationActions.logout());
         props.history.push("/logout");
         window.location.reload(true);
@@ -78,16 +76,17 @@ const Home = props => {
     if (!shortCode) {
       return;
     }
+    const user = getPlainLoggedInUser();
 
     // Because detect can be requested for both, original and shorten photo URL, and we are on localhost -> find original photo URL.
     //Face recognition API can't work with localhost shorten URL photos
     savedRecognitionsService
-      .getOriginalPhotoUrl(shortCode, userId)
+      .getOriginalPhotoUrl(shortCode, user.id)
       .then(originalPhotoUrl => {
         onDetectFacesSubmit(originalPhotoUrl);
       })
       .catch(handleError);
-  }, [props.match.params.shortCode, userId, onDetectFacesSubmit, handleError]);
+  }, [props.match.params.shortCode, onDetectFacesSubmit, handleError]);
 
   const onSaveRecognitionsSubmit = description => {
     const user = getPlainLoggedInUser();
