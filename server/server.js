@@ -8,6 +8,7 @@ app.use(bodyParser.json());
 app.use(cors());
 dotenv.config();
 
+const authorizationHelper = require("./helpers/authorization");
 const signUpController = require("./controllers/signup");
 const loginController = require("./controllers/login");
 const userController = require("./controllers/user");
@@ -35,6 +36,10 @@ app.put("/update-statistics", (req, res) => {
 });
 
 app.post("/recognize", (req, res) => {
+  if (!authorizationHelper.isUserAuthorized(req, res)) {
+    return;
+  }
+
   recognitionController.recognizeFaces(req, res);
 });
 

@@ -19,12 +19,9 @@ const updateRecognitionStatistics = user => {
 };
 
 const detectFaces = inputUrl => {
-  return apiAxios
-    .post("/recognize", { input: inputUrl })
-    .then(response => {
-      return response.data;
-    })
-    .catch(handleApiError);
+  return apiAxios.post("/recognize", { input: inputUrl }).then(response => {
+    return response.data;
+  });
 };
 
 const handleApiError = error => {

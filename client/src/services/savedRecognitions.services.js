@@ -5,8 +5,7 @@ const getOriginalPhotoUrl = (shortCode, userId) => {
     .get(`/original-photo?shortCode=${shortCode}&userId=${userId}`)
     .then(response => {
       return response.data;
-    })
-    .catch(handleApiError);
+    });
 };
 
 const getSavedRecognitions = user => {
@@ -24,12 +23,9 @@ const saveRecognition = (user, description, photoUrl) => {
     description,
     photoUrl
   };
-  return apiAxios
-    .post("/save-recognition", params)
-    .then(response => {
-      return response.data;
-    })
-    .catch(handleApiError);
+  return apiAxios.post("/save-recognition", params).then(response => {
+    return response.data;
+  });
 };
 
 const handleApiError = error => {

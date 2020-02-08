@@ -22,11 +22,22 @@ const Home = props => {
   const dispatch = useDispatch();
 
   const handleError = useCallback(
-    (message = "An error occurred. Please try again later.") => {
+    err => {
+      const { status } = err.response;
+      if (status === 401) {
+        props.history.push("/logout");
+        window.location.reload(true);
+        return;
+      }
+
       setIsRecognitionInProgress(false);
-      dispatch(alertActions.showErrorNotification(message));
+      dispatch(
+        alertActions.showErrorNotification(
+          "An error occurred. Please try again later."
+        )
+      );
     },
-    [dispatch]
+    [dispatch, props.history]
   );
 
   const onDetectFacesSubmit = useCallback(
@@ -35,10 +46,12 @@ const Home = props => {
       setSubmittedPhotoUrl(inputUrl);
 
       userService
-        .detectFaces(inputUrl)
+        .detectFaces(inputUrl, dispatch)
         .then(response => {
           if (!response || isEmptyObject(response.outputs[0].data)) {
-            throw "Please choose another photo for face recognition.";
+            throw new Error(
+              "Please choose another photo for face recognition."
+            );
           }
 
           const regions = response.outputs[0].data.regions;
@@ -66,8 +79,9 @@ const Home = props => {
       .getOriginalPhotoUrl(shortCode, userId)
       .then(originalPhotoUrl => {
         onDetectFacesSubmit(originalPhotoUrl);
-      });
-  }, [props.match.params.shortCode, userId, onDetectFacesSubmit]);
+      })
+      .catch(handleError);
+  }, [props.match.params.shortCode, userId, onDetectFacesSubmit, handleError]);
 
   const onSaveRecognitionsSubmit = description => {
     const user = getPlainLoggedInUser();
