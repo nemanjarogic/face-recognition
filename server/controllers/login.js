@@ -1,4 +1,6 @@
 const bcrypt = require("bcrypt");
+var jwt = require("jsonwebtoken");
+
 const { db } = require("../db/dbConnection");
 const { getUserByEmail } = require("./user");
 
@@ -16,7 +18,14 @@ const handleLogIn = (req, res) => {
       }
 
       return getUserByEmail(email).then(user => {
-        user.token = "fake-jwt-token";
+        user.token = jwt.sign(
+          {
+            data: email
+          },
+          process.env.JWT_SECRET_KEY,
+          { expiresIn: "1h" }
+        );
+
         res.json(user);
       });
     })
