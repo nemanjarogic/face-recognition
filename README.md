@@ -18,9 +18,9 @@ Make sure that Node.js and NPM are installed
 
 **Prerequisite**
 
-1. Create face-recognition PostgreSQL database
+1. Create face-recognition [PostgreSQL](https://www.postgresql.org/) database
 2. Initialize tables in database using scripts in server/db/scripts folder
-3. Download nginx to map short URL to original URL (https://nginx.org/)
+3. Download [nginx](https://nginx.org/) to map short URL to original URL
 4. Open yor `nginx.config` file from nginx/config and add bolded lines
    <pre>
       server {
