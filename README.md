@@ -1,6 +1,6 @@
 # Face Recognition
 
-Face Recognition is web application which you can use to recognize multiple faces for the specified photo. Application is developed using React, Redux, Node, Express as well as a PostgreSQL database.
+Face Recognition is web application which you can use to recognize multiple faces for specified photo. Application is developed using React, Redux, Node, Express as well as a PostgreSQL database.
 
 ## Features
 
